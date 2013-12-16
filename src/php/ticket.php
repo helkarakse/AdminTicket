@@ -21,14 +21,15 @@
 		switch ($cmd) {
 			case "get_tickets" :
 				echo("get_tickets");
+				getTickets();
 				break;
 
 			case "get_details" :
 				echo("get_details");
+				getTicket();
 				break;
 
 			case "add_ticket" :
-				echo("add_ticket");
 				$creator = isset($_GET["creator"]) ? $_GET["creator"] : "";
 				$description = isset($_GET["description"]) ? $_GET["description"] : "";
 				$position = isset($_GET["position"]) ? $_GET["position"] : "";
@@ -38,7 +39,7 @@
 				} else {
 					echo("Some fields are missing!");
 				}
-				
+
 				break;
 		}
 	}
@@ -84,6 +85,7 @@
 	}
 
 	function getTicket($id) {
-
+		$result = $db -> query('SELECT * FROM Tickets');
+		var_dump($result);
 	}
 ?>
