@@ -9,6 +9,7 @@
 local fileArray = {
 	{link = "https://raw.github.com/helkarakse/LuaLibs/master/src/common/functions.lua", file = "functions"},
 	{link = "https://raw.github.com/helkarakse/LuaLibs/master/src/libs/libJson.lua", file = "json"},
+	{link = "https://raw.github.com/helkarakse/AdminTicket/develop/src/data.lua", file = "data"},
 	{link = "https://raw.github.com/helkarakse/AdminTicket/develop/src/main.lua", file = "main"},
 }
 
