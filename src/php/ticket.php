@@ -6,13 +6,10 @@
 	 * @author Helkarakse (nimcuron@gmail.com)
 	 * @version 1.0
 	 */
-	error_reporting(E_ALL);
 
 	// Variables
-	$dbPath = "SQLite3Ticket.db";
-	$db = null;
-
-	initDb();
+	$ticket = new Ticket("./SQLite3Ticket.db");
+	$ticket -> initDb();
 
 	// Command parser
 	if (isset($_GET["cmd"]) && $_GET["cmd"] != "") {
@@ -20,13 +17,18 @@
 
 		switch ($cmd) {
 			case "get_tickets" :
-				echo("get_tickets");
-				getTickets();
+				$array = $ticket -> getTickets();
+				print_r($array);
 				break;
 
 			case "get_details" :
-				echo("get_details");
-				getTicket();
+				$id = isset($_GET["id"]) ? $_GET["id"] : "";
+				if (!empty($id)) {
+					$array = $ticket -> getTicket($id);
+					print_r($array);
+				} else {
+					echo("No id was provided.");
+				}
 				break;
 
 			case "add_ticket" :
@@ -34,58 +36,108 @@
 				$description = isset($_GET["description"]) ? $_GET["description"] : "";
 				$position = isset($_GET["position"]) ? $_GET["position"] : "";
 
-				if ($creator != "" && $description != "") {
-					createTicket($creator, $description, $position);
+				if (!empty($creator) && !empty($description)) {
+					$ticket -> createTicket($creator, $description, $position);
 				} else {
-					echo("Some fields are missing!");
+					echo("Creator and description fields are mandatory.");
 				}
 
 				break;
 		}
 	}
 
-	// Functions
-	function initDb() {
-		// init the db connection
-		$db = new SQLite3($dbPath) or die("Unable to create database.");
+	class Ticket {
+		public $db = null;
+		public $databasePath = "";
 
-		// create table if not already created
-		$db -> exec("CREATE TABLE IF NOT EXISTS Tickets (id INTEGER PRIMARY KEY ASC, 
+		// Constructor
+		public function __construct($path) {
+			$this -> databasePath = $path;
+		}
+
+		// Destructor
+		public function __destruct() {
+			if ($this -> db != null) {
+				$this -> db -> close();
+			}
+		}
+
+		// Functions
+		function initDb() {
+			// init the db connection
+			$this -> db = new SQLite3($this -> databasePath) or die("Failed to initialise database.");
+
+			// create table if not already created
+			$this -> db -> exec("CREATE TABLE IF NOT EXISTS Tickets (id INTEGER PRIMARY KEY ASC, 
 						creator TEXT NOT NULL, 
 						description TEXT NOT NULL,
 						position TEXT,
-						status INTEGER, 
-						type INTEGER, 
+						status TEXT, 
+						type TEXT, 
 						notes TEXT, 
 						create_date DATETIME, 
 						update_date DATETIME)");
-	}
+		}
 
-	function createTicket($creator, $description, $position) {
-		/*
-		 * Enum for status:
-		 * 0 - unread
-		 * 1 - open
-		 * 2 - in progress
-		 * 3 - completed
-		 * 4 - cancelled / rejected
+		/**
+		 * Creates a new entry in the ticket table
 		 *
-		 * Enum for type
-		 * 1 - mod
-		 * 2 - admin
+		 * @param string $creator the creator of the ticket
+		 * @param string $description the description of the ticket
+		 * @param string $position the x, y and z coordinates of the creator
+		 * @return boolean true if ticket created successfully
 		 */
+		function createTicket($creator, $description, $position) {
+			/*
+			 * Enum for status:
+			 * 0 - new
+			 * 1 - open
+			 * 2 - in progress
+			 * 3 - completed
+			 * 4 - cancelled / rejected
+			 *
+			 * Enum for type
+			 * 1 - mod
+			 * 2 - admin
+			 */
 
-		$create_date = date('Y-m-d H:i:s');
-		$db -> exec("INSERT INTO Tickets VALUES(NULL, '$creator', '$description', '$position', '0', '1', '$create_date', '$create_date')") or die("Failed to create ticket.");
-	}
+			$create_date = date('Y-m-d H:i:s');
+			return $this -> db -> exec("INSERT INTO Tickets VALUES(NULL, '$creator', '$description', '$position', 'new', 'mod', '', '$create_date', '$create_date')") or die($db -> lastErrorMsg());
+		}
 
-	function getTickets() {
-		$result = $db -> query('SELECT * FROM Tickets');
-		var_dump($result);
-	}
+		function getTickets() {
+			$return = array();
+			$result = $this -> db -> query("SELECT id, creator, description, position, status, type, notes, create_date, update_date FROM Tickets");
+			while ($row = $result -> fetchArray(SQLITE3_ASSOC)) {
+				$return[] = $row;
+			}
 
-	function getTicket($id) {
-		$result = $db -> query('SELECT * FROM Tickets');
-		var_dump($result);
+			return $return;
+		}
+
+		function getNewTickets() {
+			$return = array();
+			$result = $this -> db -> query("SELECT id, creator, description, position, status, type, notes, create_date, update_date FROM Tickets WHERE status = 'new'");
+			while ($row = $result -> fetchArray(SQLITE3_ASSOC)) {
+				$return[] = $row;
+			}
+
+			return $return;
+		}
+
+		public function getOpenTickets() {
+			$return = array();
+			$result = $this -> db -> query("SELECT id, creator, description, position, status, type, notes, create_date, update_date FROM Tickets WHERE status = 'open'");
+			while ($row = $result -> fetchArray(SQLITE3_ASSOC)) {
+				$return[] = $row;
+			}
+
+			return $return;
+		}
+
+		function getTicket($id) {
+
+		}
+
 	}
 ?>
