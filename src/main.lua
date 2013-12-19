@@ -100,8 +100,15 @@ local chatEvent = function()
 							sendMessage(username, "Ticket desc message here.")
 						end,
 						["show"] = function()
-							local description = getTicketDescription(username)
-							sendMessage(username, "Current active ticket: " .. description)
+							if (hasTicket(username)) then
+								local description = getTicketDescription(username)
+								sendMessage(username, "Current active ticket: " .. description)
+							else
+								sendMessage(username, "You are not currently creating a ticket.")
+							end
+						end,
+						["help"] = function()
+							sendMessage(username, "Ticket help should go here.")
 						end,
 						default = function()
 							-- respond that the command is not recognised
