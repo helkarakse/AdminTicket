@@ -41,18 +41,17 @@ local chatEvent = function()
 			-- functions.debug("Message received by map peripheral: ", message)
 			if (string.sub(message, 1, 2) == "//") then
 				-- strip the slash off the message and explode for args
-				functions.debug(textutils.urlEncode(stripSlash(message)))
+				-- replace spaces with + (spaces are not working for some reason)
 				local args = functions.explode("+", string.gsub(stripSlash(message), " ", "+"))
-				functions.debug(textutils.tabulate(args))
 				if (args[1] ~= "" and args[1] == "ticket") then
 					local check = switch {
 						["new"] = function()
 							-- create a new ticket for this user
-							sendMessage("New ticket message here.")
+							sendMessage(username, "New ticket message here.")
 						end,
 						["desc"] = function()
 							-- check if a ticket for this user already exists
-							sendMessage("Ticket desc message here.")
+							sendMessage(username, "Ticket desc message here.")
 						end,
 						default = function()
 							-- respond that the command is not recognised
