@@ -31,24 +31,27 @@ local chatEvent = function()
 		local _, username, message = os.pullEvent("chat_message")
 		-- check if the message is prefixed with a double //
 		if (message ~= nil) then
-			local args = functions.explode(" ", message)
-			if (string.sub(message, 1, 2) == "//" and args[1] ~= "" and args[1] == "ticket") then
-				local check = switch {
-					["new"] = function()
-						-- create a new ticket for this user
-						sendMessage("New ticket message here.")
-					end,
-					["desc"] = function()
-						-- check if a ticket for this user already exists
-						sendMessage("Ticket desc message here.")
-					end,
-					default = function()
-						-- respond that the command is not recognised
-						sendMessage(username, "Command not recognised.")
-					end,
-				}
+			if (string.sub(message, 1, 2) == "//") then
+				-- strip the slash off the message and explode for args
+				local args = functions.explode(" ", string.sub(message, 3, string.len(message)))
+				if (args[1] ~= "" and args[1] == "ticket") then
+					local check = switch {
+						["new"] = function()
+							-- create a new ticket for this user
+							sendMessage("New ticket message here.")
+						end,
+						["desc"] = function()
+							-- check if a ticket for this user already exists
+							sendMessage("Ticket desc message here.")
+						end,
+						default = function()
+							-- respond that the command is not recognised
+							sendMessage(username, "Command not recognised.")
+						end,
+					}
 
-				check:case(args[2])
+					check:case(args[2])
+				end
 			end
 		end
 	end
