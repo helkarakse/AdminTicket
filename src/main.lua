@@ -19,6 +19,7 @@ local switch = functions.switch
 
 -- Variables
 local map
+local ticketArray = {}
 
 -- Functions
 -- sends a chat message to a player
@@ -30,6 +31,24 @@ end
 -- strips preceding double slash
 local function stripSlash(message)
 	return string.sub(message, 3)
+end
+
+-- returns the user's position, x, y, z
+local function getUserPosition(username)
+	local player = map.getPlayerByName(username)
+	local entity = player.asEntity()
+	return entity.getPosition()
+end
+
+-- checks if the user has a ticket that is being created
+local function hasTicket(username)
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			return true
+		end
+	end
+
+	return false
 end
 
 -- Event Handlers
@@ -46,8 +65,20 @@ local chatEvent = function()
 				if (args[1] ~= "" and args[1] == "ticket") then
 					local check = switch {
 						["new"] = function()
-							-- create a new ticket for this user
-							sendMessage(username, "New ticket message here.")
+							-- check if the user already has a ticket open
+							if (hasTicket(username)) then
+								sendMessage(username, "Only one ticket can be created at a time.")
+							else
+								-- create a new ticket for this user
+								sendMessage(username, "New ticket created. Use //ticket desc <description> to set a description for this ticket.")
+								-- add the user to the ticket table
+								local ticket = {}
+								ticket.creator = username
+								ticket.description = ""
+								ticket.position = getUserPosition(username)
+
+								table.insert(ticketArray, ticket)
+							end
 						end,
 						["desc"] = function()
 							-- check if a ticket for this user already exists
