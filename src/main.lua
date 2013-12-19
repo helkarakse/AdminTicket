@@ -77,6 +77,37 @@ local function setTicketDescription(username, description)
 	return data.lang.noTicket
 end
 
+-- checks if the ticket is valid (ie has a description)
+local function isValidTicket(username)
+	if (getTicketDescription(username) == nil or getTicketDescription(username) == "") then
+		return false
+	else
+		return true
+	end
+end
+
+-- returns the ticket row from the ticket array for username, nil if failed
+local function getTicket(username)
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			return ticketArray[key]
+		end
+	end
+
+	return nil
+end
+
+-- attempt to submit the ticket, return true if successful
+local function doSubmitTicket(username)
+	local ticket = getTicket(username)
+	if (ticket ~= nil) then
+		data.addTicket(ticket.creator, ticket.description, ticket.position)
+		return true
+	else
+		return false
+	end
+end
+
 -- Event Handlers
 local chatEvent = function()
 	while true do
@@ -135,8 +166,12 @@ local chatEvent = function()
 							if (hasTicket(username)) then
 								-- check if the ticket is valid
 								if (isValidTicket(username)) then
-								-- deliver the ticket to the server
-
+									-- deliver the ticket to the server
+									if (doSubmitTicket(username)) then
+										sendMessage(username, data.lang.submitSuccess)
+									else
+										sendMessage(username, data.error.submitFailed)
+									end
 								else
 									sendMessage(username, data.lang.noDesc)
 								end
@@ -149,7 +184,7 @@ local chatEvent = function()
 						end,
 						default = function()
 							-- respond that the command is not recognised
-							sendMessage(username, "Command not recognised.")
+							sendMessage(username, data.error.commandNotFound)
 						end,
 					}
 
