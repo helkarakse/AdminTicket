@@ -20,9 +20,15 @@ local switch = functions.switch
 local map
 
 -- Functions
+-- sends a chat message to a player
 local function sendMessage(username, message)
 	local player = map.getPlayerByName(username)
 	player.sendChat(message)
+end
+
+-- strips preceding double slash
+local function stripSlash(string)
+
 end
 
 -- Event Handlers
@@ -34,7 +40,8 @@ local chatEvent = function()
 			functions.debug("Message received by map peripheral: ", message)
 			if (string.sub(message, 1, 2) == "//") then
 				-- strip the slash off the message and explode for args
-				local args = functions.explode(" ", string.sub(message, 3, string.len(message)))
+				functions.debug("Stripslash: ", string.sub(message, 3))
+				local args = functions.explode(" ", string.sub(message, 3))
 				if (args[1] ~= "" and args[1] == "ticket") then
 					local check = switch {
 						["new"] = function()
