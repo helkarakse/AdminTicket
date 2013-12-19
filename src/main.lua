@@ -31,6 +31,7 @@ local chatEvent = function()
 		local _, username, message = os.pullEvent("chat_message")
 		-- check if the message is prefixed with a double //
 		if (message ~= nil) then
+			functions.debug("Message received by map peripheral: ", message)
 			if (string.sub(message, 1, 2) == "//") then
 				-- strip the slash off the message and explode for args
 				local args = functions.explode(" ", string.sub(message, 3, string.len(message)))
