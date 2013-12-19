@@ -41,10 +41,8 @@ local chatEvent = function()
 			-- functions.debug("Message received by map peripheral: ", message)
 			if (string.sub(message, 1, 2) == "//") then
 				-- strip the slash off the message and explode for args
-				functions.debug(stripSlash(message))
+				functions.debug(textutils.urlEncode(stripSlash(message)))
 				local args = functions.explode(" ", stripSlash(message))
-				functions.debug(args[1])
-				functions.debug(args[2])
 				if (args[1] ~= "" and args[1] == "ticket") then
 					local check = switch {
 						["new"] = function()
