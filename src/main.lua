@@ -93,7 +93,7 @@ local chatEvent = function()
 						["new"] = function()
 							-- check if the user already has a ticket open
 							if (hasTicket(username)) then
-								sendMessage(username, "Only one ticket can be created at a time.")
+								sendMessage(username, data.lang.oneTicket)
 							else
 								-- create a new ticket for this user
 								sendMessage(username, "New ticket created. Use //ticket desc <description> to set a description for this ticket.")
@@ -111,10 +111,11 @@ local chatEvent = function()
 							if (hasTicket(username)) then
 								-- update the ticket with the description
 								if (args[3] ~= nil and args[3] ~= "") then
-									setTicketDescription(username, args[3])
+									local description = string.sub(stripSlash(message), string.len("ticket desc "))
+									setTicketDescription(username, description)
 									sendMessage(username, "Your ticket has been updated. Use //ticket submit to submit your ticket.")
 								else
-									sendMessage(username, "Description cannot be empty.")
+									sendMessage(username, "Please type a description to set.")
 								end
 							else
 								sendMessage(username, data.lang.noTicket)
