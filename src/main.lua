@@ -51,6 +51,21 @@ local function hasTicket(username)
 	return false
 end
 
+-- returns the description of the user's currently active ticket
+local function getTicketDescription(username)
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			if (value.description ~= "") then
+				return value.description
+			else
+				return "No description set yet."
+			end
+		end
+	end
+
+	return "Error: You do not have a ticket."
+end
+
 -- Event Handlers
 local chatEvent = function()
 	while true do
@@ -83,6 +98,10 @@ local chatEvent = function()
 						["desc"] = function()
 							-- check if a ticket for this user already exists
 							sendMessage(username, "Ticket desc message here.")
+						end,
+						["show"] = function()
+							local description = getTicketDescription(username)
+							sendMessage(username, "Current active ticket: " .. description)
 						end,
 						default = function()
 							-- respond that the command is not recognised
