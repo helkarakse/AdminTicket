@@ -133,9 +133,15 @@ local chatEvent = function()
 						["submit"] = function()
 							-- check if a ticket for this user already exists
 							if (hasTicket(username)) then
+								-- check if the ticket is valid
+								if (isValidTicket(username)) then
+								-- deliver the ticket to the server
 
+								else
+									sendMessage(username, data.lang.noDesc)
+								end
 							else
-
+								sendMessage(username, data.lang.noTicket)
 							end
 						end,
 						["help"] = function()
