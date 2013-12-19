@@ -101,6 +101,7 @@ end
 local function doSubmitTicket(username)
 	local ticket = getTicket(username)
 	if (ticket ~= nil) then
+		functions.debug(ticket.creator, ticket.description, ticket.position)
 		data.addTicket(ticket.creator, ticket.description, ticket.position)
 		return true
 	else
