@@ -33,11 +33,12 @@ local function stripSlash(message)
 	return string.sub(message, 3)
 end
 
--- returns the user's position, x, y, z
+-- returns the user's position as a string
 local function getUserPosition(username)
 	local player = map.getPlayerByName(username)
 	local entity = player.asEntity()
-	return entity.getPosition()
+	local xPos, yPos, zPos = entity.getPosition()
+	return xPos .. "," .. yPos .. "," .. zPos
 end
 
 -- checks if the user has a ticket that is being created
