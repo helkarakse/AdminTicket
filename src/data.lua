@@ -11,6 +11,10 @@ local functions = functions
 local textutils = textutils
 local http = http
 
+-- Language
+lang = {}
+lang.noTicket = "You are not currently creating a ticket."
+
 -- Functions
 local function doPost(url, data)
 	local response = http.post(url, data)
