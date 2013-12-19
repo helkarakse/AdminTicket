@@ -14,6 +14,7 @@ os.loadAPI("json")
 local functions = functions
 local data = data
 local json = json
+local string = string
 local switch = functions.switch
 
 -- Variables
@@ -28,7 +29,7 @@ end
 
 -- strips preceding double slash
 local function stripSlash(string)
-
+	return string.sub(message, 3)
 end
 
 -- Event Handlers
@@ -40,8 +41,8 @@ local chatEvent = function()
 			-- functions.debug("Message received by map peripheral: ", message)
 			if (string.sub(message, 1, 2) == "//") then
 				-- strip the slash off the message and explode for args
-				-- functions.debug("Stripslash: ", string.sub(message, 3))
-				local args = functions.explode(" ", string.sub(message, 3))
+				functions.debug(stripSlash(message))
+				local args = functions.explode(" ", stripSlash(message))
 				functions.debug(args[1])
 				functions.debug(args[2])
 				if (args[1] ~= "" and args[1] == "ticket") then
