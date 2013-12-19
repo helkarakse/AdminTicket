@@ -6,8 +6,8 @@
 	 * @author Helkarakse (nimcuron@gmail.com)
 	 * @version 1.0
 	 */
-	require_once("./classTicket.php");
-	
+	require_once ("./classTicket.php");
+
 	// Variables
 	$ticket = new Ticket("./SQLite3Ticket.db");
 	$ticket -> initDb();
@@ -23,7 +23,7 @@
 				break;
 
 			case "get_details" :
-				$id = isset($_GET["id"]) ? $_GET["id"] : "";
+				$id = isset($_POST["id"]) ? $_POST["id"] : "";
 				if (!empty($id)) {
 					$array = $ticket -> getTicket($id);
 					print_r($array);
@@ -33,9 +33,9 @@
 				break;
 
 			case "add_ticket" :
-				$creator = isset($_GET["creator"]) ? $_GET["creator"] : "";
-				$description = isset($_GET["description"]) ? $_GET["description"] : "";
-				$position = isset($_GET["position"]) ? $_GET["position"] : "";
+				$creator = isset($_POST["creator"]) ? $_POST["creator"] : "";
+				$description = isset($_POST["description"]) ? $_POST["description"] : "";
+				$position = isset($_POST["position"]) ? $_POST["position"] : "";
 
 				if (!empty($creator) && !empty($description)) {
 					$ticket -> createTicket($creator, $description, $position);
@@ -43,6 +43,10 @@
 					echo("Creator and description fields are mandatory.");
 				}
 
+				break;
+
+			default :
+				echo("Unknown command request.");
 				break;
 		}
 	}
