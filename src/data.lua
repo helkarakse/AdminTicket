@@ -32,12 +32,14 @@ local function doPost(url, data)
 		local responseText = response.readAll()
 		functions.debug(responseText)
 		response.close()
+		return true
 	else
 		functions.debug("Warning: Failed to retrieve response from server")
+		return false
 	end
 end
 
 function addTicket(creator, description, position)
 	local url = "http://dev.otegamers.com/helkarakse/ticket/ticket.php?cmd=add_ticket"
-	doPost(url, "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
+	return doPost(url, "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
 end

@@ -98,13 +98,32 @@ local function getTicket(username)
 	return nil
 end
 
+-- deletes a ticket from the array
+local function removeTicket(username)
+	local userKey
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			userKey = key
+		end
+	end
+
+	if (userKey ~= nil and userKey > 0) then
+		table.remove(ticketArray, userKey)
+	end
+end
+
 -- attempt to submit the ticket, return true if successful
 local function doSubmitTicket(username)
 	local ticket = getTicket(username)
 	if (ticket ~= nil) then
-		functions.debug(ticket.creator, ticket.description, ticket.position)
-		data.addTicket(ticket.creator, ticket.description, ticket.position)
-		return true
+		-- send the ticket
+		if (data.addTicket(ticket.creator, ticket.description, ticket.position)) then
+			-- delete the ticket from the ticket array
+			removeTicket(username)
+			return true
+		else
+			return false
+		end
 	else
 		return false
 	end
@@ -179,6 +198,12 @@ local chatEvent = function()
 								end
 							else
 								sendMessage(username, data.lang.noTicket)
+							end
+						end,
+						["cancel"] = function()
+							if (hasTicket(username)) then
+								removeTicket(username)
+								sendMessage(username, "The ticket that is currently being created has been cancelled.")
 							end
 						end,
 						["help"] = function()

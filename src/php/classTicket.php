@@ -89,7 +89,10 @@
 		}
 
 		function getTicket($id) {
+			$return = array();
+			$result = $this -> db -> querySingle("SELECT creator, description, position, status, type, notes, create_date, update_date FROM Tickets WHERE ", true);
 
+			return $return;
 		}
 
 	}
