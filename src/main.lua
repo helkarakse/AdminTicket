@@ -63,7 +63,18 @@ local function getTicketDescription(username)
 		end
 	end
 
-	return "Error: You do not have a ticket."
+	return data.lang.noTicket
+end
+
+-- sets the description of the user's currently active ticket
+local function setTicketDescription(username, description)
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			value.description = description
+		end
+	end
+
+	return data.lang.noTicket
 end
 
 -- Event Handlers
@@ -97,14 +108,33 @@ local chatEvent = function()
 						end,
 						["desc"] = function()
 							-- check if a ticket for this user already exists
-							sendMessage(username, "Ticket desc message here.")
+							if (hasTicket(username)) then
+								-- update the ticket with the description
+								if (args[3] ~= nil and args[3] ~= "") then
+									setTicketDescription(username, args[3])
+									sendMessage(username, "Your ticket has been updated. Use //ticket submit to submit your ticket.")
+								else
+									sendMessage(username, "Description cannot be empty.")
+								end
+							else
+								sendMessage(username, data.lang.noTicket)
+							end
 						end,
 						["show"] = function()
 							if (hasTicket(username)) then
+								-- display the user's ticket description
 								local description = getTicketDescription(username)
 								sendMessage(username, "Current active ticket: " .. description)
 							else
-								sendMessage(username, "You are not currently creating a ticket.")
+								sendMessage(username, data.lang.noTicket)
+							end
+						end,
+						["submit"] = function()
+							-- check if a ticket for this user already exists
+							if (hasTicket(username)) then
+
+							else
+
 							end
 						end,
 						["help"] = function()
