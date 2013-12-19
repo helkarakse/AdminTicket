@@ -14,22 +14,47 @@ os.loadAPI("json")
 local functions = functions
 local data = data
 local json = json
+local switch = functions.switch
 
 -- Variables
 local map
+
+-- Functions
+local function sendMessage(username, message)
+	local player = map.getPlayerByName(username)
+	player.sendChat(message)
+end
 
 -- Event Handlers
 local chatEvent = function()
 	while true do
 		local _, username, message = os.pullEvent("chat_message")
 		-- check if the message is prefixed with a double //
-		if (string.sub(message, 1, 2) == "//") then
-			print("true");
+		if (message ~= nil) then
+			local args = functions.explode(" ", message)
+			if (string.sub(message, 1, 2) == "//" and args[1] ~= "" and args[1] == "ticket") then
+				local check = switch {
+					["new"] = function()
+						-- create a new ticket for this user
+						sendMessage("New ticket message here.")
+					end,
+					["desc"] = function()
+						-- check if a ticket for this user already exists
+						sendMessage("Ticket desc message here.")
+					end,
+					default = function()
+						-- respond that the command is not recognised
+						sendMessage(username, "Command not recognised.")
+					end,
+				}
+
+				check:case(args[2])
+			end
 		end
 	end
 end
 
--- Functions
+-- Main
 local function init()
 	local hasMap, mapDir = functions.locatePeripheral("adventure map interface")
 	if (hasMap) then
