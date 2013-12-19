@@ -28,7 +28,7 @@ local function sendMessage(username, message)
 end
 
 -- strips preceding double slash
-local function stripSlash(string)
+local function stripSlash(message)
 	return string.sub(message, 3)
 end
 
