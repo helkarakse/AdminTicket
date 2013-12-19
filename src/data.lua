@@ -14,6 +14,7 @@ local http = http
 -- Language
 lang = {}
 lang.noTicket = "You are not currently creating a ticket."
+lang.oneTicket = "Only one ticket can be created at a time."
 
 -- Functions
 local function doPost(url, data)
