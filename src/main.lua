@@ -37,10 +37,10 @@ local chatEvent = function()
 		local _, username, message = os.pullEvent("chat_message")
 		-- check if the message is prefixed with a double //
 		if (message ~= nil) then
-			functions.debug("Message received by map peripheral: ", message)
+			-- functions.debug("Message received by map peripheral: ", message)
 			if (string.sub(message, 1, 2) == "//") then
 				-- strip the slash off the message and explode for args
-				functions.debug("Stripslash: ", string.sub(message, 3))
+				-- functions.debug("Stripslash: ", string.sub(message, 3))
 				local args = functions.explode(" ", string.sub(message, 3))
 				if (args[1] ~= "" and args[1] == "ticket") then
 					local check = switch {
