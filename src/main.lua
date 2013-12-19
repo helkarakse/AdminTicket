@@ -42,6 +42,8 @@ local chatEvent = function()
 				-- strip the slash off the message and explode for args
 				-- functions.debug("Stripslash: ", string.sub(message, 3))
 				local args = functions.explode(" ", string.sub(message, 3))
+				functions.debug(args[1])
+				functions.debug(args[2])
 				if (args[1] ~= "" and args[1] == "ticket") then
 					local check = switch {
 						["new"] = function()
