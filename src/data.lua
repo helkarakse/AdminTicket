@@ -23,6 +23,9 @@ error = {}
 error.submitFailed = "Error 10: Failed to send ticket. Notify a developer immediately."
 error.commandNotFound = "Error 90: Command not found."
 
+-- Misc
+commandPrefix = "//"
+
 -- Functions
 local function doPost(url, data)
 	local response = http.post(url, data)
