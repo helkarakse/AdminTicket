@@ -58,7 +58,7 @@ local chatEvent = function()
 end
 
 -- Main
-local function init()
+local function main()
 	local hasMap, mapDir = functions.locatePeripheral("adventure map interface")
 	if (hasMap) then
 		map = peripheral.wrap(mapDir)
@@ -70,3 +70,5 @@ local function init()
 
 	parallel.waitForAll(chatEvent)
 end
+
+main()
