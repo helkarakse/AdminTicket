@@ -26,15 +26,13 @@ error.commandNotFound = "Error 90: Command not found."
 -- Functions
 local function doPost(url, data)
 	local response = http.post(url, data)
-	functions.debug("Url: ", url)
-	functions.debug("Data: ", data)
 	if (response) then
 		local responseText = response.readAll()
-		functions.debug(responseText)
+		functions.info(responseText)
 		response.close()
 		return true
 	else
-		functions.debug("Warning: Failed to retrieve response from server")
+		functions.error("Warning: Failed to retrieve response from server")
 		return false
 	end
 end
