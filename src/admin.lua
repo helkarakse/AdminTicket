@@ -8,10 +8,12 @@ Helkarakse 20131220
 
 -- Libraries
 os.loadAPI("functions")
+os.loadAPI("common")
 os.loadAPI("data")
 os.loadAPI("json")
 
 -- References
+local common = common
 local functions = functions
 local data = data
 local json = json
@@ -32,7 +34,7 @@ local chatEvent = function()
 			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix) then
 				-- strip the slash off the message and explode for args
 				-- replace spaces with + (spaces are not working for some reason)
-				local args = functions.explode("+", string.gsub(stripSlash(message), " ", "+"))
+				local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
 				if (args[1] ~= "" and args[1] == "ticket") then
 					ticketHandler(username, message, args)
 				end

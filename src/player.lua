@@ -25,17 +25,13 @@ local map
 local ticketArray = {}
 local serverId = string.sub(os.getComputerLabel(), 1, 1)
 
--- Functions
+-- Wrappers
 -- send message wrapper
 local function sendMessage(username, message)
 	common.sendMessage(map, username, message)
 end
 
--- strips preceding double slash
-local function stripSlash(message)
-	return string.sub(message, string.len(data.commandPrefix) + 1)
-end
-
+-- Functions
 -- returns the user's position as a string
 local function getUserPosition(username)
 	local player = map.getPlayerByName(username)
@@ -158,7 +154,7 @@ local function ticketHandler(username, message, args)
 				-- update the ticket with the description
 				if (args[3] ~= nil and args[3] ~= "") then
 					-- extract the description from the message
-					local description = string.sub(stripSlash(message), string.len("ticket") + 6)
+					local description = string.sub(common.stripPrefix(message), string.len("ticket") + 6)
 					setTicketDescription(username, description)
 					common.sendMessage(username, "Your ticket has been updated. Use //ticket submit to submit your ticket.")
 					functions.info("Ticket description for", username,"set to", description)
@@ -227,7 +223,7 @@ local chatEvent = function()
 			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix) then
 				-- strip the slash off the message and explode for args
 				-- replace spaces with + (spaces are not working for some reason)
-				local args = functions.explode("+", string.gsub(stripSlash(message), " ", "+"))
+				local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
 				if (args[1] ~= "" and args[1] == "ticket") then
 					ticketHandler(username, message, args)
 				end
