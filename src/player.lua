@@ -32,7 +32,7 @@ end
 
 -- strips preceding double slash
 local function stripSlash(message)
-	return string.sub(message, 3)
+	return string.sub(message, string.len(data.commandPrefix) + 1)
 end
 
 -- returns the user's position as a string
@@ -223,7 +223,7 @@ local chatEvent = function()
 		-- check if the message is prefixed with a double //
 		if (message ~= nil) then
 			-- functions.debug("Message received by map peripheral: ", message)
-			if (string.sub(message, 1, 2) == "//") then
+			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix) then
 				-- strip the slash off the message and explode for args
 				-- replace spaces with + (spaces are not working for some reason)
 				local args = functions.explode("+", string.gsub(stripSlash(message), " ", "+"))
