@@ -24,6 +24,20 @@ local switch = functions.switch
 local map
 local serverId = string.sub(os.getComputerLabel(), 1, 1)
 
+-- Command Handlers
+local function ticketHandler(username, message, args)
+	local check = switch {
+		["new"] = function()
+		end,
+		default = function()
+			-- respond that the command is not found
+			common.sendMessage(username, data.error.commandNotFound)
+		end,
+	}
+
+	check:case(args[2])
+end
+
 -- Event Handlers
 local chatEvent = function()
 	while true do
