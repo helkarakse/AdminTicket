@@ -1,8 +1,8 @@
 --[[
 
-AdminTicket Data
+Ticket (Data)
 Do not modify, copy or distribute without permission of author
-Helkarakse 20131216
+Helkarakse 20131219
 
 ]]
 
