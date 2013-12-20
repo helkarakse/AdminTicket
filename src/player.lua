@@ -134,10 +134,10 @@ local function ticketHandler(username, message, args)
 		["new"] = function()
 			-- check if the user already has a ticket open
 			if (hasTicket(username)) then
-				common.sendMessage(username, data.lang.oneTicket)
+				sendMessage(username, data.lang.oneTicket)
 			else
 				-- create a new ticket for this user
-				common.sendMessage(username, "New ticket created. Use //ticket desc <description> to set a description for this ticket.")
+				sendMessage(username, "New ticket created. Use //ticket desc <description> to set a description for this ticket.")
 				-- add the user to the ticket table
 				local ticket = {}
 				ticket.creator = username
@@ -156,22 +156,22 @@ local function ticketHandler(username, message, args)
 					-- extract the description from the message
 					local description = string.sub(common.stripPrefix(message), string.len("ticket") + 6)
 					setTicketDescription(username, description)
-					common.sendMessage(username, "Your ticket has been updated. Use //ticket submit to submit your ticket.")
+					sendMessage(username, "Your ticket has been updated. Use //ticket submit to submit your ticket.")
 					functions.info("Ticket description for", username,"set to", description)
 				else
-					common.sendMessage(username, "Please type a description to set.")
+					sendMessage(username, "Please type a description to set.")
 				end
 			else
-				common.sendMessage(username, data.lang.noTicket)
+				sendMessage(username, data.lang.noTicket)
 			end
 		end,
 		["show"] = function()
 			if (hasTicket(username)) then
 				-- display the user's ticket description
 				local description = getTicketDescription(username)
-				common.sendMessage(username, "Current active ticket: " .. description)
+				sendMessage(username, "Current active ticket: " .. description)
 			else
-				common.sendMessage(username, data.lang.noTicket)
+				sendMessage(username, data.lang.noTicket)
 			end
 		end,
 		["submit"] = function()
@@ -181,32 +181,32 @@ local function ticketHandler(username, message, args)
 				if (isValidTicket(username)) then
 					-- deliver the ticket to the server
 					if (doSubmitTicket(username)) then
-						common.sendMessage(username, data.lang.submitSuccess)
+						sendMessage(username, data.lang.submitSuccess)
 						functions.info("Ticket submitted for", username)
 					else
-						common.sendMessage(username, data.error.submitFailed)
+						sendMessage(username, data.error.submitFailed)
 						functions.error("Failed to submit ticket for", username)
 					end
 				else
-					common.sendMessage(username, data.lang.noDesc)
+					sendMessage(username, data.lang.noDesc)
 				end
 			else
-				common.sendMessage(username, data.lang.noTicket)
+				sendMessage(username, data.lang.noTicket)
 			end
 		end,
 		["cancel"] = function()
 			if (hasTicket(username)) then
 				removeTicket(username)
-				common.sendMessage(username, "The ticket that is currently being created has been cancelled.")
+				sendMessage(username, "The ticket that is currently being created has been cancelled.")
 				functions.info("Ticket cancelled by user", username)
 			end
 		end,
 		["help"] = function()
-			common.sendMessage(username, "Ticket help should go here.")
+			sendMessage(username, "Ticket help should go here.")
 		end,
 		default = function()
 			-- respond that the command is not recognised
-			common.sendMessage(username, data.error.commandNotFound)
+			sendMessage(username, data.error.commandNotFound)
 		end,
 	}
 
