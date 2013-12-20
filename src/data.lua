@@ -46,5 +46,4 @@ function addTicket(creator, description, position)
 end
 
 function validateAuth(username)
-
 end

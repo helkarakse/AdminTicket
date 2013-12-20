@@ -49,6 +49,7 @@ local function hasTicket(username)
   end
 
   return false
+
 end
 
 -- returns the description of the user's currently active ticket
@@ -64,6 +65,7 @@ local function getTicketDescription(username)
   end
 
   return data.lang.noTicket
+
 end
 
 -- sets the description of the user's currently active ticket
@@ -109,6 +111,7 @@ local function removeTicket(username)
   if (userKey ~= nil and userKey > 0) then
     table.remove(ticketArray, userKey)
   end
+
 end
 
 -- attempt to submit the ticket, return true if successful
@@ -126,6 +129,7 @@ local function doSubmitTicket(username)
   else
     return false
   end
+
 end
 
 -- Command Handlers
