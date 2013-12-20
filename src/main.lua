@@ -130,7 +130,7 @@ local function doSubmitTicket(username)
 end
 
 -- Command Handlers
-local function ticketHandler(username, args)
+local function ticketHandler(username, message, args)
 	local check = switch {
 		["new"] = function()
 			-- check if the user already has a ticket open
@@ -146,7 +146,7 @@ local function ticketHandler(username, args)
 				ticket.position = getUserPosition(username)
 
 				table.insert(ticketArray, ticket)
-				functions.info("New ticket created for ", username)
+				functions.info("New ticket created for", username)
 			end
 		end,
 		["desc"] = function()
@@ -157,7 +157,7 @@ local function ticketHandler(username, args)
 					local description = string.sub(stripSlash(message), string.len("ticket desc "))
 					setTicketDescription(username, description)
 					sendMessage(username, "Your ticket has been updated. Use //ticket submit to submit your ticket.")
-					functions.info("Ticket description for ", username, " set to ", description)
+					functions.info("Ticket description for", username,"set to", description)
 				else
 					sendMessage(username, "Please type a description to set.")
 				end
@@ -182,10 +182,10 @@ local function ticketHandler(username, args)
 					-- deliver the ticket to the server
 					if (doSubmitTicket(username)) then
 						sendMessage(username, data.lang.submitSuccess)
-						functions.info("Ticket submitted for ", username)
+						functions.info("Ticket submitted for", username)
 					else
 						sendMessage(username, data.error.submitFailed)
-						functions.error("Failed to submit ticket for ", username)
+						functions.error("Failed to submit ticket for", username)
 					end
 				else
 					sendMessage(username, data.lang.noDesc)
@@ -198,7 +198,7 @@ local function ticketHandler(username, args)
 			if (hasTicket(username)) then
 				removeTicket(username)
 				sendMessage(username, "The ticket that is currently being created has been cancelled.")
-				functions.info("Ticket cancelled by user ", username)
+				functions.info("Ticket cancelled by user", username)
 			end
 		end,
 		["help"] = function()
@@ -225,7 +225,7 @@ local chatEvent = function()
 				-- replace spaces with + (spaces are not working for some reason)
 				local args = functions.explode("+", string.gsub(stripSlash(message), " ", "+"))
 				if (args[1] ~= "" and args[1] == "ticket") then
-					ticketHandler(username, args)
+					ticketHandler(username, message, args)
 				end
 			end
 		end
