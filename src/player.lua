@@ -26,6 +26,11 @@ local ticketArray = {}
 local serverId = string.sub(os.getComputerLabel(), 1, 1)
 
 -- Functions
+-- send message wrapper
+local function sendMessage(username, message)
+	common.sendMessage(map, username, message)
+end
+
 -- strips preceding double slash
 local function stripSlash(message)
 	return string.sub(message, string.len(data.commandPrefix) + 1)

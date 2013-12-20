@@ -7,7 +7,7 @@ Helkarakse 20131220
 ]]
 
 -- sends a chat message to a player
-function sendMessage(username, message)
+function sendMessage(map, username, message)
 	local player = map.getPlayerByName(username)
 	player.sendChat(message)
 end
