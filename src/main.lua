@@ -38,7 +38,7 @@ local function getUserPosition(username)
 	local player = map.getPlayerByName(username)
 	local entity = player.asEntity()
 	local xPos, yPos, zPos = entity.getPosition()
-	return xPos .. "," .. yPos .. "," .. zPos
+	return xPos .. "," .. yPos .. "," .. zPos .. ":" .. entity.getWorldID()
 end
 
 -- checks if the user has a ticket that is being created
@@ -154,7 +154,8 @@ local function ticketHandler(username, message, args)
 			if (hasTicket(username)) then
 				-- update the ticket with the description
 				if (args[3] ~= nil and args[3] ~= "") then
-					local description = string.sub(stripSlash(message), string.len("ticket desc "))
+					-- extract the description from the message
+					local description = string.sub(stripSlash(message), string.len("ticket") + 6)
 					setTicketDescription(username, description)
 					sendMessage(username, "Your ticket has been updated. Use //ticket submit to submit your ticket.")
 					functions.info("Ticket description for", username,"set to", description)
