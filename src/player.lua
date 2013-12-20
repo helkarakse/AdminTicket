@@ -2,10 +2,11 @@
 
 Ticket (Player)
 Do not modify, copy or distribute without permission of author
-Helkarakse 20131216
+Helkarakse 20131219
 
 ]]
 
+-- Libraries
 os.loadAPI("functions")
 os.loadAPI("data")
 os.loadAPI("json")
@@ -20,6 +21,7 @@ local switch = functions.switch
 -- Variables
 local map
 local ticketArray = {}
+local serverId = string.sub(os.getComputerLabel(), 1, 1)
 
 -- Functions
 -- sends a chat message to a player
