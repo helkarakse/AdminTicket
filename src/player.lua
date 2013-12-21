@@ -28,7 +28,7 @@ local serverId = string.sub(os.getComputerLabel(), 1, 1)
 -- Wrappers
 -- send message wrapper
 local function sendMessage(username, message)
-  common.sendMessage(map, username, message)
+	common.sendMessage(map, username, message)
 end
 
 -- Functions
@@ -134,120 +134,150 @@ end
 
 -- Command Handlers
 local function ticketHandler(username, message, args)
-  local check = switch {
-    ["new"] = function()
-      -- check if the user already has a ticket open
-      if (hasTicket(username)) then
-        sendMessage(username, data.lang.oneTicket)
-      else
-        -- create a new ticket for this user
-        sendMessage(username, "New ticket created. Use //ticket desc <description> to set a description for this ticket.")
-        -- add the user to the ticket table
-        local ticket = {}
-        ticket.creator = username
-        ticket.description = ""
-        ticket.position = getUserPosition(username)
+	local check = switch {
+		["new"] = function()
+			-- creates a new ticket for editing and submission
+			-- check if the user already has a ticket open
+			if (hasTicket(username)) then
+				sendMessage(username, data.lang.oneTicket)
+			else
+				-- create a new ticket for this user
+				sendMessage(username, "New ticket created. Use //ticket desc <description> to set a description for this ticket.")
+				-- add the user to the ticket table
+				local ticket = {}
+				ticket.creator = username
+				ticket.description = ""
+				ticket.position = getUserPosition(username)
 
-        table.insert(ticketArray, ticket)
-        functions.info("New ticket created for", username)
-      end
-    end,
-    ["desc"] = function()
-      -- check if a ticket for this user already exists
-      if (hasTicket(username)) then
-        -- update the ticket with the description
-        if (args[3] ~= nil and args[3] ~= "") then
-          -- extract the description from the message
-          local description = string.sub(common.stripPrefix(message), string.len("ticket") + 6)
-          setTicketDescription(username, description)
-          sendMessage(username, "Your ticket has been updated. Use //ticket submit to submit your ticket.")
-          functions.info("Ticket description for", username,"set to", description)
-        else
-          sendMessage(username, "Please type a description to set.")
-        end
-      else
-        sendMessage(username, data.lang.noTicket)
-      end
-    end,
-    ["show"] = function()
-      if (hasTicket(username)) then
-        -- display the user's ticket description
-        local description = getTicketDescription(username)
-        sendMessage(username, "Current active ticket: " .. description)
-      else
-        sendMessage(username, data.lang.noTicket)
-      end
-    end,
-    ["submit"] = function()
-      -- check if a ticket for this user already exists
-      if (hasTicket(username)) then
-        -- check if the ticket is valid
-        if (isValidTicket(username)) then
-          -- deliver the ticket to the server
-          if (doSubmitTicket(username)) then
-            sendMessage(username, data.lang.submitSuccess)
-            functions.info("Ticket submitted for", username)
-          else
-            sendMessage(username, data.error.submitFailed)
-            functions.error("Failed to submit ticket for", username)
-          end
-        else
-          sendMessage(username, data.lang.noDesc)
-        end
-      else
-        sendMessage(username, data.lang.noTicket)
-      end
-    end,
-    ["cancel"] = function()
-      if (hasTicket(username)) then
-        removeTicket(username)
-        sendMessage(username, "The ticket that is currently being created has been cancelled.")
-        functions.info("Ticket cancelled by user", username)
-      end
-    end,
-    ["help"] = function()
-      sendMessage(username, "Ticket help should go here.")
-    end,
-    default = function()
-      -- respond that the command is not recognised
-      sendMessage(username, data.error.commandNotFound)
-    end,
-  }
+				table.insert(ticketArray, ticket)
+				functions.info("New ticket created for", username)
+			end
+		end,
+		["desc"] = function()
+			-- adds a description to the ticket
+			-- check if a ticket for this user already exists
+			if (hasTicket(username)) then
+				-- update the ticket with the description
+				if (args[3] ~= nil and args[3] ~= "") then
+					-- extract the description from the message
+					local description = string.sub(common.stripPrefix(message), string.len("ticket") + 6)
+					setTicketDescription(username, description)
+					sendMessage(username, "Your ticket has been updated. Use //ticket submit to submit your ticket.")
+					functions.info("Ticket description for", username,"set to", description)
+				else
+					sendMessage(username, "Please type a description to set.")
+				end
+			else
+				sendMessage(username, data.lang.noTicket)
+			end
+		end,
+		["show"] = function()
+			-- show the ticket that is currently being created
+			if (hasTicket(username)) then
+				-- display the user's ticket description
+				local description = getTicketDescription(username)
+				sendMessage(username, "Current active ticket: " .. description)
+			else
+				sendMessage(username, data.lang.noTicket)
+			end
+		end,
+		["submit"] = function()
+			-- submit the ticket to the server
+			-- check if a ticket for this user already exists
+			if (hasTicket(username)) then
+				-- check if the ticket is valid
+				if (isValidTicket(username)) then
+					-- deliver the ticket to the server
+					if (doSubmitTicket(username)) then
+						sendMessage(username, data.lang.submitSuccess)
+						functions.info("Ticket submitted for", username)
+					else
+						sendMessage(username, data.error.submitFailed)
+						functions.error("Failed to submit ticket for", username)
+					end
+				else
+					sendMessage(username, data.lang.noDesc)
+				end
+			else
+				sendMessage(username, data.lang.noTicket)
+			end
+		end,
+		["cancel"] = function()
+			-- cancels the currently active ticket
+			if (hasTicket(username)) then
+				removeTicket(username)
+				sendMessage(username, "The ticket that is currently being created has been cancelled.")
+				functions.info("Ticket cancelled by user", username)
+			end
+		end,
+		["list"] = function()
+			-- lists the tickets currently started by the user and are not completed
+			local jsonText = data.getMyTickets(username)
+			local array = json.decode(jsonText)
+			if (array.success) then
+				if (functions.getTableCount(array.result) > 0) then
+					sendMessage(username, data.lang.myTickets)
+					for i = 1, functions.getTableCount(array.result) do
+						sendMessage(username, "["..i.."]: " .. array.result[i].description .. " [" .. string.upper(array.result[i].status) .. "]")
+					end
+				else
+					sendMessage(username, data.lang.noTicketsFound)
+				end
+			else
+				sendMessage(username, data.error.apiFailed)
+			end
+		end,
+		["help"] = function()
+			-- ticket based help
+			sendMessage(username, "Ticket help should go here.")
+		end,
+		default = function()
+			-- respond that the command is not recognized
+			sendMessage(username, data.error.commandNotFound)
+		end,
+	}
 
-  check:case(args[2])
+	check:case(args[2])
 end
 
 -- Event Handlers
 local chatEvent = function()
-  while true do
-    local _, username, message = os.pullEvent("chat_message")
-    -- check if the message is prefixed with a double //
-    if (message ~= nil) then
-      -- functions.debug("Message received by map peripheral: ", message)
-      if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix) then
-        -- strip the slash off the message and explode for args
-        -- replace spaces with + (spaces are not working for some reason)
-        local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
-        if (args[1] ~= "" and args[1] == "ticket") then
-          ticketHandler(username, message, args)
-        end
-      end
-    end
-  end
+	while true do
+		local _, username, message = os.pullEvent("chat_message")
+		-- check if the message is prefixed with a double //
+		if (message ~= nil) then
+			-- functions.debug("Message received by map peripheral: ", message)
+			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix) then
+				-- strip the slash off the message and explode for arguments
+				-- replace spaces with + (spaces are not working for some reason)
+				local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
+				if (args[1] ~= "" and args[1] == "ticket") then
+					ticketHandler(username, message, args)
+				end
+			end
+		end
+	end
+end
+
+local loginEvent = function()
+	while true do
+		local _, username = os.pullEvent("player_login")
+		-- notify the user about tickets that are not currently completed
+		functions.debug(username,"logged in.")
+	end
 end
 
 -- Main
 local function main()
-  local hasMap, mapDir = functions.locatePeripheral("adventure map interface")
-  if (hasMap) then
-    map = peripheral.wrap(mapDir)
-    functions.debug("Map peripheral detected and wrapped.")
-  else
-    functions.debug("No map peripheral detected. This is required.")
-    return
-  end
+	local hasMap, mapDir = functions.locatePeripheral("adventure map interface")
+	if (hasMap) then
+		map = peripheral.wrap(mapDir)
+		functions.debug("Map peripheral detected and wrapped.")
+	else
+		functions.debug("No map peripheral detected. This is required.")
+		return
+	end
 
-  parallel.waitForAll(chatEvent)
+	parallel.waitForAll(chatEvent)
 end
 
-main()
