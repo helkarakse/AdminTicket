@@ -319,10 +319,7 @@ end
 function decode_scanWhitespace(s,startPos)
 	local whitespace=" \n\r\t"
 	local stringLen = 0
-	print(s)
-	if (s == "") then
-		stringLen = 0
-	else
+	if (s ~= nil) then
 		stringLen = string.len(s)
 	end
 	while ( string.find(whitespace, string.sub(s,startPos,startPos), 1, true)  and startPos <= stringLen) do
