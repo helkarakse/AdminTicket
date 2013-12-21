@@ -6,8 +6,6 @@ Helkarakse 20131219
 
 ]]
 
-os.loadAPI("json")
-
 -- References
 local functions = functions
 local textutils = textutils
@@ -31,12 +29,6 @@ commandPrefix = "//"
 local basePath = "http://dev.otegamers.com/helkarakse/ticket/"
 
 -- Functions
--- JSON
-local function parseJson(text)
-	local array = json.decode(text)
-	return array
-end
-
 -- HTTP
 -- sends data to a url that requires post params
 local function doPost(url, data)
@@ -81,7 +73,7 @@ end
 
 function getMyTickets(username)
 	local url = basePath .. "ticket.php?cmd=get_my_tickets"
-	return parseJson(doGetPost(url, "name=" .. username))
+	return doGetPost(url, "name=" .. username)
 end
 
 -- Auth

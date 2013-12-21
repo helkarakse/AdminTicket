@@ -10,6 +10,7 @@ Helkarakse 20131219
 os.loadAPI("functions")
 os.loadAPI("data")
 os.loadAPI("common")
+os.loadAPI("json")
 
 -- References
 local functions = functions
@@ -207,8 +208,9 @@ local function ticketHandler(username, message, args)
 		end,
 		["list"] = function()
 			-- lists the tickets currently started by the user and are not completed
-			local jsonArray = data.getMyTickets(username)
-			functions.debug(jsonArray)
+			local jsonText = data.getMyTickets(username)
+			local array = json.decode(text)
+			functions.debug(textutils.tabulate(array))
 		end,
 		["help"] = function()
 			-- ticket based help
@@ -246,6 +248,7 @@ local loginEvent = function()
 	while true do
 		local _, username = os.pullEvent("player_login")
 		-- notify the user about tickets that are not currently completed
+		functions.debug(username,"logged in.")
 	end
 end
 
