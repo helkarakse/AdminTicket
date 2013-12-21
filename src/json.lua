@@ -319,6 +319,7 @@ end
 function decode_scanWhitespace(s,startPos)
 	local whitespace=" \n\r\t"
 	local stringLen = 0
+	print(s)
 	if (s == "") then
 		stringLen = 0
 	else
