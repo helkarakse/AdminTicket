@@ -66,6 +66,7 @@ end
 local function doGetPost(url, data)
 	local response = http.post(url, data)
 	if (response) then
+		functions.debug(response.readAll())
 		return response.readAll()
 	else
 		functions.error("Warning: Failed to retrieve response from server")
