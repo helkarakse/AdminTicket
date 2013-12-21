@@ -211,8 +211,13 @@ local function ticketHandler(username, message, args)
 			local jsonText = data.getMyTickets(username)
 			local array = json.decode(jsonText)
 			if (array.success) then
-				for i = 1, functions.getTableCount(array.result) do
-					sendMessage(username, "["..i.."]: " .. array.result[i].description .. " [" .. string.upper(array.result[i].status) .. "]")
+				if (functions.getTableCount(array.result) > 0) then
+					sendMessage(username, data.lang.myTickets)
+					for i = 1, functions.getTableCount(array.result) do
+						sendMessage(username, "["..i.."]: " .. array.result[i].description .. " [" .. string.upper(array.result[i].status) .. "]")
+					end
+				else
+					sendMessage(username, data.lang.noTicketsFound)
 				end
 			else
 				sendMessage(username, data.error.apiFailed)

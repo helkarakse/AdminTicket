@@ -17,6 +17,8 @@ lang.noTicket = "You are not currently creating a ticket."
 lang.oneTicket = "Only one ticket can be created at a time."
 lang.noDesc = "No description set for ticket. This is mandatory!"
 lang.submitSuccess = "Your ticket has been successfully submitted. A moderator will attend to it shortly."
+lang.myTickets = "Displaying my currently active tickets:"
+lang.noTicketsFound = "You have no active tickets at the moment."
 
 -- Errors
 error = {}
