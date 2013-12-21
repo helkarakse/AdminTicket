@@ -321,9 +321,9 @@ function decode_scanWhitespace(s,startPos)
 	local stringLen = 0
 	if (s ~= nil) then
 		stringLen = string.len(s)
-	end
-	while ( string.find(whitespace, string.sub(s,startPos,startPos), 1, true)  and startPos <= stringLen) do
-		startPos = startPos + 1
+		while ( string.find(whitespace, string.sub(s,startPos,startPos), 1, true)  and startPos <= stringLen) do
+			startPos = startPos + 1
+		end
 	end
 	return startPos
 end
