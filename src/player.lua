@@ -210,7 +210,7 @@ local function ticketHandler(username, message, args)
 			-- lists the tickets currently started by the user and are not completed
 			local jsonText = data.getMyTickets(username)
 			local array = json.decode(jsonText)
-			functions.debug(textutils.tabulate(array))
+			print(functions.tablePrint(array, 1))
 		end,
 		["help"] = function()
 			-- ticket based help
