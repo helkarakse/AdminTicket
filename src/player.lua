@@ -116,7 +116,9 @@ local function doSubmitTicket(username)
 	local ticket = getTicket(username)
 	if (ticket ~= nil) then
 		-- send the ticket
-		if (data.addTicket(ticket.creator, ticket.description, ticket.position)) then
+		local jsonText = data.addTicket(ticket.creator, ticket.description, ticket.position)
+		local array = json.decode(jsonText)
+		if (array.success) then
 			-- delete the ticket from the ticket array
 			removeTicket(username)
 			return true
@@ -274,7 +276,7 @@ local function main()
 		return
 	end
 
-	parallel.waitForAll(chatEvent)
+	parallel.waitForAll(chatEvent, loginEvent)
 end
 
 main()
