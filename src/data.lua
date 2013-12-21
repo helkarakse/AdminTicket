@@ -6,6 +6,8 @@ Helkarakse 20131219
 
 ]]
 
+os.loadAPI("json")
+
 -- References
 local functions = functions
 local textutils = textutils
@@ -29,44 +31,60 @@ commandPrefix = "//"
 local basePath = "http://dev.otegamers.com/helkarakse/ticket/"
 
 -- Functions
+-- JSON
+local function parseJson(text)
+	local array = json.decode(text)
+	return array
+end
+
+-- HTTP
+-- sends data to a url that requires post params
 local function doPost(url, data)
-    local response = http.post(url, data)
-    if (response) then
-        local responseText = response.readAll()
-        functions.info(responseText)
-        response.close()
-        return true
-    else
-        functions.error("Warning: Failed to retrieve response from server")
-        return false
-    end
+	local response = http.post(url, data)
+	if (response) then
+		local responseText = response.readAll()
+		functions.info(responseText)
+		response.close()
+		return true
+	else
+		functions.error("Warning: Failed to retrieve response from server")
+		return false
+	end
 end
 
+-- returns data from a url that requires get params
 local function doGet(url)
-    local response = http.get(url)
-    if (response) then
-        return response.readAll()
-    else
-        functions.error("Warning: Failed to retrieve response from server")
-    end
+	local response = http.get(url)
+	if (response) then
+		return response.readAll()
+	else
+		functions.error("Warning: Failed to retrieve response from server")
+	end
 end
 
+-- returns data from a url that requires post params
 local function doGetPost(url, data)
-    local response = http.post(url, data)
-    if (response) then
-        return response.readAll()
-    else
-        functions.error("Warning: Failed to retrieve response from server")
-    end
+	local response = http.post(url, data)
+	if (response) then
+		return response.readAll()
+	else
+		functions.error("Warning: Failed to retrieve response from server")
+	end
 end
 
+-- Ticket
 function addTicket(creator, description, position)
-    local url = basePath .. "ticket.php?cmd=add_ticket"
-    return doPost(url, "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
+	local url = basePath .. "ticket.php?cmd=add_ticket"
+	return doPost(url, "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
+end
+
+function getMyTickets(username)
+	local url = basePath .. "ticket.php?cmd=get_my_tickets"
+	return parseJson(doGetPost(url, "name=" .. username))
 end
 
 -- Auth
 function getAuth(username)
-    local url = basePath .. "auth.php?cmd=get_auth"
-    return doGetPost(url, "name=" .. username)
+	local url = basePath .. "auth.php?cmd=get_auth"
+	return doGetPost(url, "name=" .. username)
 end
