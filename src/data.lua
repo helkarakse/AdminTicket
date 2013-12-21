@@ -26,21 +26,47 @@ error.commandNotFound = "Error 90: Command not found."
 -- Misc
 commandPrefix = "//"
 
+local basePath = "http://dev.otegamers.com/helkarakse/ticket/"
+
 -- Functions
 local function doPost(url, data)
-	local response = http.post(url, data)
-	if (response) then
-		local responseText = response.readAll()
-		functions.info(responseText)
-		response.close()
-		return true
-	else
-		functions.error("Warning: Failed to retrieve response from server")
-		return false
-	end
+    local response = http.post(url, data)
+    if (response) then
+        local responseText = response.readAll()
+        functions.info(responseText)
+        response.close()
+        return true
+    else
+        functions.error("Warning: Failed to retrieve response from server")
+        return false
+    end
+end
+
+local function doGet(url)
+    local response = http.get(url)
+    if (response) then
+        return response.readAll()
+    else
+        functions.error("Warning: Failed to retrieve response from server")
+    end
+end
+
+local function doGetPost(url, data)
+    local response = http.post(url, data)
+    if (response) then
+        return response.readAll()
+    else
+        functions.error("Warning: Failed to retrieve response from server")
+    end
 end
 
 function addTicket(creator, description, position)
-	local url = "http://dev.otegamers.com/helkarakse/ticket/ticket.php?cmd=add_ticket"
-	return doPost(url, "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
+    local url = basePath .. "ticket.php?cmd=add_ticket"
+    return doPost(url, "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
+end
+
+-- Auth
+function getAuth(username)
+    local url = basePath .. "auth.php?cmd=get_auth"
+    return doGetPost(url, "name=" .. username)
 end
