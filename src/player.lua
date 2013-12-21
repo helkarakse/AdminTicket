@@ -10,7 +10,6 @@ Helkarakse 20131219
 os.loadAPI("functions")
 os.loadAPI("data")
 os.loadAPI("common")
-os.loadAPI("json")
 
 -- References
 local functions = functions
@@ -132,6 +131,7 @@ end
 local function ticketHandler(username, message, args)
 	local check = switch {
 		["new"] = function()
+			-- creates a new ticket for editing and submission
 			-- check if the user already has a ticket open
 			if (hasTicket(username)) then
 				sendMessage(username, data.lang.oneTicket)
@@ -149,6 +149,7 @@ local function ticketHandler(username, message, args)
 			end
 		end,
 		["desc"] = function()
+			-- adds a description to the ticket
 			-- check if a ticket for this user already exists
 			if (hasTicket(username)) then
 				-- update the ticket with the description
@@ -166,6 +167,7 @@ local function ticketHandler(username, message, args)
 			end
 		end,
 		["show"] = function()
+			-- show the ticket that is currently being created
 			if (hasTicket(username)) then
 				-- display the user's ticket description
 				local description = getTicketDescription(username)
@@ -175,6 +177,7 @@ local function ticketHandler(username, message, args)
 			end
 		end,
 		["submit"] = function()
+			-- submit the ticket to the server
 			-- check if a ticket for this user already exists
 			if (hasTicket(username)) then
 				-- check if the ticket is valid
@@ -195,17 +198,24 @@ local function ticketHandler(username, message, args)
 			end
 		end,
 		["cancel"] = function()
+			-- cancels the currently active ticket
 			if (hasTicket(username)) then
 				removeTicket(username)
 				sendMessage(username, "The ticket that is currently being created has been cancelled.")
 				functions.info("Ticket cancelled by user", username)
 			end
 		end,
+		["list"] = function()
+			-- lists the tickets currently started by the user and are not completed
+			local jsonArray = data.getMyTickets(username)
+			functions.debug(jsonArray)
+		end,
 		["help"] = function()
+			-- ticket based help
 			sendMessage(username, "Ticket help should go here.")
 		end,
 		default = function()
-			-- respond that the command is not recognised
+			-- respond that the command is not recognized
 			sendMessage(username, data.error.commandNotFound)
 		end,
 	}
@@ -221,7 +231,7 @@ local chatEvent = function()
 		if (message ~= nil) then
 			-- functions.debug("Message received by map peripheral: ", message)
 			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix) then
-				-- strip the slash off the message and explode for args
+				-- strip the slash off the message and explode for arguments
 				-- replace spaces with + (spaces are not working for some reason)
 				local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
 				if (args[1] ~= "" and args[1] == "ticket") then
@@ -229,6 +239,13 @@ local chatEvent = function()
 				end
 			end
 		end
+	end
+end
+
+local loginEvent = function()
+	while true do
+		local _, username = os.pullEvent("player_login")
+		-- notify the user about tickets that are not currently completed
 	end
 end
 
