@@ -48,7 +48,9 @@ end
 local function doGet(url)
 	local response = http.get(url)
 	if (response) then
-		return response.readAll()
+		local responseText = response.readAll()
+		functions.info(responseText)
+		return responseText
 	else
 		functions.error("Warning: Failed to retrieve response from server")
 	end
@@ -58,8 +60,9 @@ end
 local function doGetPost(url, data)
 	local response = http.post(url, data)
 	if (response) then
-		functions.debug(response.readAll())
-		return response.readAll()
+		local responseText = response.readAll()
+		functions.info(responseText)
+		return responseText
 	else
 		functions.error("Warning: Failed to retrieve response from server")
 	end
