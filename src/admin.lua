@@ -23,10 +23,24 @@ local switch = functions.switch
 local map
 local serverId = string.sub(os.getComputerLabel(), 1, 1)
 
+local authArray = {}
+
 -- Wrappers
 -- send message wrapper
 local function sendMessage(username, message)
 	common.sendMessage(map, username, message)
+end
+
+-- Functions
+-- Checks the local auth array for the username and returns the auth level
+local function getAuthLevel(username)
+	for i = 1, functions.getTableCount(authArray) do
+		if (authArray[i].name == username) then
+			return authArray[i].auth_level
+		end
+	end
+	functions.info("Auth level not found for this username:", username)
+	return 0
 end
 
 -- Command Handlers
@@ -49,7 +63,7 @@ local chatEvent = function()
 	while true do
 		local _, username, message = os.pullEvent("chat_message")
 		-- check if the message is prefixed with a double //
-		if (message ~= nil) then
+		if (message ~= nil and getAuthLevel(username) > 0) then
 			-- functions.debug("Message received by map peripheral: ", message)
 			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix) then
 				-- strip the slash off the message and explode for args
@@ -69,7 +83,7 @@ local authLoop = function()
 		local jsonText = data.getAuthArray()
 		local array = json.decode(jsonText)
 		if (array.success) then
-			
+			authArray = array.result
 		end
 		sleep(60)
 	end
