@@ -96,6 +96,12 @@ function countMyTickets(username)
 	return doGetPost(url, "name=" .. username)
 end
 
+-- Issues
+function getIssues(authLevel)
+	local url = basePath .. "ticket.php?cmd=get_issues"
+	return doGetPost(url, "auth_level=" .. authLevel)
+end
+
 -- Auth
 -- Returns the auth level for a username
 function getAuth(username)

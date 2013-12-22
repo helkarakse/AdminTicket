@@ -48,7 +48,7 @@ end
 local function issueHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
-
+			local jsonText = data.
 		end,
 		default = function()
 			-- respond that the command is not found
