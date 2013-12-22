@@ -24,9 +24,10 @@ local map
 local serverId = string.sub(os.getComputerLabel(), 1, 1)
 
 -- Command Handlers
-local function ticketHandler(username, message, args)
+local function issueHandler(username, message, args)
 	local check = switch {
-		["new"] = function()
+		["list"] = function()
+		
 		end,
 		default = function()
 			-- respond that the command is not found
@@ -49,8 +50,8 @@ local chatEvent = function()
 				-- replace spaces with + (spaces are not working for some reason)
 				local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
 				functions.debug(textutils.tabulate(args))
-				if (args[1] ~= "" and args[1] == "ticket") then
-					ticketHandler(username, message, args)
+				if (args[1] ~= "" and args[1] == "issue") then
+					issueHandler(username, message, args)
 				end
 			end
 		end
