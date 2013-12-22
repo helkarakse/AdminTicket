@@ -175,6 +175,10 @@ local function ticketHandler(username, message, args)
 			if (hasTicket(username)) then
 				-- display the user's ticket description
 				local description = getTicketDescription(username)
+				if (description == "" or description == nil) then
+					description = "No description set yet."
+				end
+				
 				sendMessage(username, "Current active ticket: " .. description)
 			else
 				sendMessage(username, data.lang.noTicket)
