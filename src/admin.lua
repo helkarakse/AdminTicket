@@ -100,7 +100,7 @@ local function main()
 		return
 	end
 
-	parallel.waitForAll(chatEvent)
+	parallel.waitForAll(chatEvent, authLoop)
 end
 
 main()
