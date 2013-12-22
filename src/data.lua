@@ -97,7 +97,14 @@ function countMyTickets(username)
 end
 
 -- Auth
+-- Returns the auth level for a username
 function getAuth(username)
 	local url = basePath .. "auth.php?cmd=get_auth"
 	return doGetPost(url, "name=" .. username)
+end
+
+-- Returns a full list of the auth table
+function getAuthArray()
+	local url = basePath .. "auth.php?cmd=get_auth_array"
+	return doGet(url, true)
 end

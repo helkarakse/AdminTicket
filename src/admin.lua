@@ -55,12 +55,23 @@ local chatEvent = function()
 				-- strip the slash off the message and explode for args
 				-- replace spaces with + (spaces are not working for some reason)
 				local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
-				functions.debug(textutils.tabulate(args))
 				if (args[1] ~= "" and args[1] == "issue") then
 					issueHandler(username, message, args)
 				end
 			end
 		end
+	end
+end
+
+-- Loops
+local authLoop = function()
+	while true do
+		local jsonText = data.getAuthArray()
+		local array = json.decode(jsonText)
+		if (array.success) then
+			
+		end
+		sleep(60)
 	end
 end
 
