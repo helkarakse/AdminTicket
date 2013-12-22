@@ -51,7 +51,7 @@ local function issueHandler(username, message, args)
 		end,
 		default = function()
 			-- respond that the command is not found
-			common.sendMessage(username, data.error.commandNotFound)
+			sendMessage(username, data.error.commandNotFound)
 		end,
 	}
 
