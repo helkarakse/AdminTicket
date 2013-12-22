@@ -106,5 +106,5 @@ end
 -- Returns a full list of the auth table
 function getAuthArray()
 	local url = basePath .. "auth.php?cmd=get_auth_array"
-	return doGet(url, true)
+	return doGet(url)
 end
