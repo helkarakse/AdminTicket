@@ -23,11 +23,17 @@ local switch = functions.switch
 local map
 local serverId = string.sub(os.getComputerLabel(), 1, 1)
 
+-- Wrappers
+-- send message wrapper
+local function sendMessage(username, message)
+	common.sendMessage(map, username, message)
+end
+
 -- Command Handlers
 local function issueHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
-		
+
 		end,
 		default = function()
 			-- respond that the command is not found
