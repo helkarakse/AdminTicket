@@ -239,6 +239,7 @@ local function ticketHandler(username, message, args)
 end
 
 -- Event Handlers
+-- Chat handler
 local chatEvent = function()
 	while true do
 		local _, username, message = os.pullEvent("chat_message")
@@ -257,6 +258,7 @@ local chatEvent = function()
 	end
 end
 
+-- Login handler
 local loginEvent = function()
 	while true do
 		local _, username = os.pullEvent("player_login")
@@ -277,6 +279,8 @@ local loginEvent = function()
 
 			countTotal = countNew + countOpen
 
+			-- notify user after a second's pause to let messages filter to the end
+			sleep(1)
 			sendMessage(username, data.lang.loginMessage)
 			sendMessage(username, "You have ["..countTotal.."] tickets total. ["..countNew.."] are new, and ["..countOpen.."] are currently being processed.")
 		end
