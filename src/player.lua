@@ -262,7 +262,7 @@ local loginEvent = function()
 		local _, username = os.pullEvent("player_login")
 		-- notify the user about tickets that are not currently completed
 		functions.debug(username,"logged in.")
-		local jsonText = data.getMyTickets(username)
+		local jsonText = data.countMyTickets(username)
 		local array = json.decode(jsonText)
 		if (array.success) then
 			-- only notify the user if there is some result to begin with
