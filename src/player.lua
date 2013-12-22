@@ -269,9 +269,9 @@ local loginEvent = function()
 			local countNew, countOpen, countTotal = 0, 0, 0
 			for i = 1, functions.getTableCount(array.result) do
 				if (array.result[i].status == "new") then
-					countNew = countNew + 1
+					countNew = countNew + array.result[i].count
 				elseif(array.result[i].status == "open") then
-					countOpen = countOpen + 1
+					countOpen = countOpen + array.result[i].count
 				end
 			end
 
