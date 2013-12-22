@@ -178,7 +178,7 @@ local function ticketHandler(username, message, args)
 				if (description == "" or description == nil) then
 					description = "No description set yet."
 				end
-				
+
 				sendMessage(username, "Current active ticket: " .. description)
 			else
 				sendMessage(username, data.lang.noTicket)
@@ -268,7 +268,6 @@ local loginEvent = function()
 	while true do
 		local _, username = os.pullEvent("player_login")
 		-- notify the user about tickets that are not currently completed
-		functions.debug(username,"logged in.")
 		local jsonText = data.countMyTickets(username)
 		local array = json.decode(jsonText)
 		if (array.success and functions.getTableCount(array.result) > 0) then
@@ -285,6 +284,7 @@ local loginEvent = function()
 			countTotal = countNew + countOpen
 
 			-- notify user after a second's pause to let messages filter to the end
+			functions.info(username,"has active tickets, sending counts.")
 			sleep(1)
 			sendMessage(username, data.lang.loginMessage)
 			sendMessage(username, "You have ["..countTotal.."] tickets total. ["..countNew.."] are new, and ["..countOpen.."] are currently being processed.")

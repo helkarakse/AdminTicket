@@ -35,11 +35,14 @@ local basePath = "http://dev.otegamers.com/helkarakse/ticket/"
 -- Functions
 -- HTTP
 -- sends data to a url that requires post params
-local function doPost(url, data)
+local function doPost(url, data, debug)
+	local showDebug = debug or false
 	local response = http.post(url, data)
 	if (response) then
 		local responseText = response.readAll()
-		functions.info(responseText)
+		if (showDebug) then
+			functions.info(responseText)
+		end
 		return responseText
 	else
 		functions.error("Warning: Failed to retrieve response from server")
@@ -48,11 +51,14 @@ local function doPost(url, data)
 end
 
 -- returns data from a url that requires get params
-local function doGet(url)
+local function doGet(url, debug)
+	local showDebug = debug or false
 	local response = http.get(url)
 	if (response) then
 		local responseText = response.readAll()
-		functions.info(responseText)
+		if (showDebug) then
+			functions.info(responseText)
+		end
 		return responseText
 	else
 		functions.error("Warning: Failed to retrieve response from server")
@@ -60,11 +66,14 @@ local function doGet(url)
 end
 
 -- returns data from a url that requires post params
-local function doGetPost(url, data)
+local function doGetPost(url, data, debug)
+	local showDebug = debug or false
 	local response = http.post(url, data)
 	if (response) then
 		local responseText = response.readAll()
-		functions.info(responseText)
+		if (showDebug) then
+			functions.info(responseText)
+		end
 		return responseText
 	else
 		functions.error("Warning: Failed to retrieve response from server")
