@@ -34,10 +34,10 @@ end
 -- Functions
 -- returns the user's position as a string
 local function getUserPosition(username)
-  local player = map.getPlayerByName(username)
-  local entity = player.asEntity()
-  local xPos, yPos, zPos = entity.getPosition()
-  return xPos .. "," .. yPos .. "," .. zPos .. ":" .. entity.getWorldID()
+	local player = map.getPlayerByName(username)
+	local entity = player.asEntity()
+	local xPos, yPos, zPos = entity.getPosition()
+	return xPos .. "," .. yPos .. "," .. zPos .. ":" .. entity.getWorldID() .. ":" .. serverId
 end
 
 -- checks if the user has a ticket that is being created
@@ -54,17 +54,16 @@ end
 
 -- returns the description of the user's currently active ticket
 local function getTicketDescription(username)
-  for key, value in pairs(ticketArray) do
-    if (value.creator == username) then
-      if (value.description ~= "") then
-        return value.description
-      else
-        return "No description set yet."
-      end
-    end
-  end
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			if (value.description ~= "") then
+				return value.description
+			else
+				return ""
+			end
+		end
+	end
 
-  return data.lang.noTicket
 
 end
 
@@ -81,11 +80,12 @@ end
 
 -- checks if the ticket is valid (ie has a description)
 local function isValidTicket(username)
-  if (getTicketDescription(username) == nil or getTicketDescription(username) == "") then
-    return false
-  else
-    return true
-  end
+	local ticketDesc = getTicketDescription(username)
+	if (ticketDesc == nil or ticketDesc == "") then
+		return false
+	else
+		return true
+	end
 end
 
 -- returns the ticket row from the ticket array for username, nil if failed
@@ -116,20 +116,21 @@ end
 
 -- attempt to submit the ticket, return true if successful
 local function doSubmitTicket(username)
-  local ticket = getTicket(username)
-  if (ticket ~= nil) then
-    -- send the ticket
-    if (data.addTicket(ticket.creator, ticket.description, ticket.position)) then
-      -- delete the ticket from the ticket array
-      removeTicket(username)
-      return true
-    else
-      return false
-    end
-  else
-    return false
-  end
-
+	local ticket = getTicket(username)
+	if (ticket ~= nil) then
+		-- send the ticket
+		local jsonText = data.addTicket(ticket.creator, ticket.description, ticket.position)
+		local array = json.decode(jsonText)
+		if (array.success) then
+			-- delete the ticket from the ticket array
+			removeTicket(username)
+			return true
+		else
+			return false
+		end
+	else
+		return false
+	end
 end
 
 -- Command Handlers
@@ -176,6 +177,10 @@ local function ticketHandler(username, message, args)
 			if (hasTicket(username)) then
 				-- display the user's ticket description
 				local description = getTicketDescription(username)
+				if (description == "" or description == nil) then
+					description = "No description set yet."
+				end
+
 				sendMessage(username, "Current active ticket: " .. description)
 			else
 				sendMessage(username, data.lang.noTicket)
@@ -241,6 +246,7 @@ local function ticketHandler(username, message, args)
 end
 
 -- Event Handlers
+-- Chat handler
 local chatEvent = function()
 	while true do
 		local _, username, message = os.pullEvent("chat_message")
@@ -259,11 +265,32 @@ local chatEvent = function()
 	end
 end
 
+-- Login handler
 local loginEvent = function()
 	while true do
 		local _, username = os.pullEvent("player_login")
 		-- notify the user about tickets that are not currently completed
-		functions.debug(username,"logged in.")
+		local jsonText = data.countMyTickets(username)
+		local array = json.decode(jsonText)
+		if (array.success and functions.getTableCount(array.result) > 0) then
+			-- only notify the user if there is some result to begin with
+			local countNew, countOpen, countTotal = 0, 0, 0
+			for i = 1, functions.getTableCount(array.result) do
+				if (array.result[i].status == "new") then
+					countNew = countNew + array.result[i].count
+				elseif(array.result[i].status == "open") then
+					countOpen = countOpen + array.result[i].count
+				end
+			end
+
+			countTotal = countNew + countOpen
+
+			-- notify user after a second's pause to let messages filter to the end
+			functions.info(username,"has active tickets, sending counts.")
+			sleep(1)
+			sendMessage(username, data.lang.loginMessage)
+			sendMessage(username, "You have ["..countTotal.."] tickets total. ["..countNew.."] are new, and ["..countOpen.."] are currently being processed.")
+		end
 	end
 end
 
@@ -278,6 +305,6 @@ local function main()
 		return
 	end
 
-	parallel.waitForAll(chatEvent)
+	parallel.waitForAll(chatEvent, loginEvent)
 end
 

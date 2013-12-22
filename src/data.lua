@@ -19,6 +19,7 @@ lang.noDesc = "No description set for ticket. This is mandatory!"
 lang.submitSuccess = "Your ticket has been successfully submitted. A moderator will attend to it shortly."
 lang.myTickets = "Displaying my currently active tickets:"
 lang.noTicketsFound = "You have no active tickets at the moment."
+lang.loginMessage = "Welcome to the OTEGamers Ticket System."
 
 -- Errors
 error = {}
@@ -34,25 +35,30 @@ local basePath = "http://dev.otegamers.com/helkarakse/ticket/"
 -- Functions
 -- HTTP
 -- sends data to a url that requires post params
-local function doPost(url, data)
-  local response = http.post(url, data)
-  if (response) then
-    local responseText = response.readAll()
-    functions.info(responseText)
-    response.close()
-    return true
-  else
-    functions.error("Warning: Failed to retrieve response from server")
-    return false
-  end
+local function doPost(url, data, debug)
+	local showDebug = debug or false
+	local response = http.post(url, data)
+	if (response) then
+		local responseText = response.readAll()
+		if (showDebug) then
+			functions.info(responseText)
+		end
+		return responseText
+	else
+		functions.error("Warning: Failed to retrieve response from server")
+		return false
+	end
 end
 
 -- returns data from a url that requires get params
-local function doGet(url)
+local function doGet(url, debug)
+	local showDebug = debug or false
 	local response = http.get(url)
 	if (response) then
 		local responseText = response.readAll()
-		functions.info(responseText)
+		if (showDebug) then
+			functions.info(responseText)
+		end
 		return responseText
 	else
 		functions.error("Warning: Failed to retrieve response from server")
@@ -60,11 +66,14 @@ local function doGet(url)
 end
 
 -- returns data from a url that requires post params
-local function doGetPost(url, data)
+local function doGetPost(url, data, debug)
+	local showDebug = debug or false
 	local response = http.post(url, data)
 	if (response) then
 		local responseText = response.readAll()
-		functions.info(responseText)
+		if (showDebug) then
+			functions.info(responseText)
+		end
 		return responseText
 	else
 		functions.error("Warning: Failed to retrieve response from server")
@@ -82,8 +91,20 @@ function getMyTickets(username)
 	return doGetPost(url, "name=" .. username)
 end
 
+function countMyTickets(username)
+	local url = basePath .. "ticket.php?cmd=get_my_ticket_count"
+	return doGetPost(url, "name=" .. username)
+end
+
 -- Auth
+-- Returns the auth level for a username
 function getAuth(username)
 	local url = basePath .. "auth.php?cmd=get_auth"
 	return doGetPost(url, "name=" .. username)
+end
+
+-- Returns a full list of the auth table
+function getAuthArray()
+	local url = basePath .. "auth.php?cmd=get_auth_array"
+	return doGet(url)
 end
