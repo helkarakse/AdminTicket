@@ -58,7 +58,7 @@ local function getTicketDescription(username)
 			if (value.description ~= "") then
 				return value.description
 			else
-				return "No description set yet."
+				return ""
 			end
 		end
 	end
@@ -79,7 +79,8 @@ end
 
 -- checks if the ticket is valid (ie has a description)
 local function isValidTicket(username)
-	if (getTicketDescription(username) == nil or getTicketDescription(username) == "") then
+	local ticketDesc = getTicketDescription(username)
+	if (ticketDesc == nil or ticketDesc == "") then
 		return false
 	else
 		return true
