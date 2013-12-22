@@ -19,6 +19,7 @@ lang.noDesc = "No description set for ticket. This is mandatory!"
 lang.submitSuccess = "Your ticket has been successfully submitted. A moderator will attend to it shortly."
 lang.myTickets = "Displaying my currently active tickets:"
 lang.noTicketsFound = "You have no active tickets at the moment."
+lang.loginMessage = "Welcome to the OTEGamers Ticket System."
 
 -- Errors
 error = {}
@@ -79,6 +80,11 @@ end
 
 function getMyTickets(username)
 	local url = basePath .. "ticket.php?cmd=get_my_tickets"
+	return doGetPost(url, "name=" .. username)
+end
+
+function countMyTickets(username)
+	local url = basePath .. "ticket.php?cmd=get_my_ticket_count"
 	return doGetPost(url, "name=" .. username)
 end
 
