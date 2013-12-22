@@ -10,6 +10,7 @@ Helkarakse 20131220
 os.loadAPI("functions")
 os.loadAPI("common")
 os.loadAPI("data")
+os.loadAPI("json")
 
 -- References
 local common = common
