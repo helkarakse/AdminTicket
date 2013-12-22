@@ -264,9 +264,21 @@ local loginEvent = function()
 		functions.debug(username,"logged in.")
 		local jsonText = data.countMyTickets(username)
 		local array = json.decode(jsonText)
-		if (array.success) then
+		if (array.success and functions.getTableCount(array.result) > 0) then
 			-- only notify the user if there is some result to begin with
-			functions.debug(textutils.tabulate(array.result))
+			local countNew, countOpen, countTotal = 0, 0, 0
+			for i = 1, functions.getTableCount(array.result) do
+				if (array.result[i].status == "new") then
+					countNew = countNew + 1
+				elseif(array.result[i].status == "open") then
+					countOpen = countOpen + 1
+				end
+			end
+
+			countTotal = countNew + countOpen
+
+			sendMessage(username, data.lang.loginMessage)
+			sendMessage(username, "You have ["..countTotal.."] tickets total. ["..countNew.."] are new, and ["..countOpen.."] are currently being processed.")
 		end
 	end
 end
