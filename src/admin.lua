@@ -81,6 +81,7 @@ end
 -- Loops
 local authLoop = function()
 	while true do
+		functions.info("Loading authentication package from server.")
 		local jsonText = data.getAuthArray()
 		local array = json.decode(jsonText)
 		if (array.success) then
