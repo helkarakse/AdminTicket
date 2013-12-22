@@ -40,8 +40,7 @@ local function doPost(url, data)
 	if (response) then
 		local responseText = response.readAll()
 		functions.info(responseText)
-		response.close()
-		return true
+		return responseText
 	else
 		functions.error("Warning: Failed to retrieve response from server")
 		return false
