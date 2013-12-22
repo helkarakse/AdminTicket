@@ -37,7 +37,7 @@ local function getUserPosition(username)
 	local player = map.getPlayerByName(username)
 	local entity = player.asEntity()
 	local xPos, yPos, zPos = entity.getPosition()
-	return xPos .. "," .. yPos .. "," .. zPos .. ":" .. entity.getWorldID()
+	return xPos .. "," .. yPos .. "," .. zPos .. ":" .. entity.getWorldID() .. ":" .. serverId
 end
 
 -- checks if the user has a ticket that is being created
