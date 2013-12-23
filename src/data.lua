@@ -99,7 +99,7 @@ end
 -- Issues
 function getIssues(authLevel)
 	local url = basePath .. "ticket.php?cmd=get_issues"
-	return doGetPost(url, "auth_level=" .. authLevel)
+	return doGetPost(url, "auth_level=" .. authLevel, true)
 end
 
 -- Auth

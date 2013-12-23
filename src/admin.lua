@@ -48,7 +48,13 @@ end
 local function issueHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
-			local jsonText = data.
+			local jsonText = data.getIssues(getAuthLevel(username))
+			local array = json.decode(jsonText)
+			if (array.success) then
+
+			else
+				sendMessage(username, data.error.apiFailed)
+			end
 		end,
 		default = function()
 			-- respond that the command is not found
