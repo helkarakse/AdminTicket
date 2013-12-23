@@ -51,7 +51,10 @@ local function issueHandler(username, message, args)
 			local jsonText = data.getIssues(getAuthLevel(username))
 			local array = json.decode(jsonText)
 			if (array.success) then
-
+				sendMessage(username, "Listing available issues:")
+				for i = 1, functions.getTableCount(array.result) do
+					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " [" .. array.result[i].create_date .. "]")
+				end
 			else
 				sendMessage(username, data.error.apiFailed)
 			end
