@@ -49,7 +49,13 @@ end
 local function issueHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
-			local jsonText = data.getIssues(getAuthLevel(username))
+			local jsonText = ""
+			if (args[3] ~= nil) then
+				jsonText = data.getIssuesByType(getAuthLevel(username), args[3])
+			else
+				jsonText = data.getIssues(getAuthLevel(username))
+			end
+
 			local array = json.decode(jsonText)
 			if (array.success) then
 				sendMessage(username, "Listing available issues:")
