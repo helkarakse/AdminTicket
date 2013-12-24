@@ -114,3 +114,4 @@ local function main()
 	parallel.waitForAll(chatEvent, authLoop)
 end
 
+main()
