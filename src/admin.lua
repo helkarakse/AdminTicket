@@ -68,6 +68,9 @@ local function issueHandler(username, message, args)
 				sendMessage(username, data.error.apiFailed)
 			end
 		end,
+		["show"] = function()
+
+		end,
 		["help"] = function()
 			local helpArray = {
 				data.commandPrefix .. "issue list - Lists all the currently available issues.",
