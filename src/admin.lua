@@ -50,7 +50,7 @@ local function issueHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
 			local jsonText = ""
-			if (args[3] ~= nil) then
+			if (args[3] ~= nil and args[3] ~= "") then
 				functions.debug("Retrieving issues by type.")
 				jsonText = data.getIssuesByType(getAuthLevel(username), args[3])
 			else
