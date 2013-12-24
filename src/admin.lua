@@ -74,7 +74,7 @@ local function issueHandler(username, message, args)
 				local array = json.decode(jsonText)
 				if (array.success) then
 					sendMessage(username, "Displaying details for issue: #" .. args[3])
-					for key, value in pairs(array.result[0]) do
+					for key, value in pairs(array.result[1]) do
 						sendMessage(username, "[" .. functions.ucFirst(key) .. "]: " .. value)
 					end
 				else
