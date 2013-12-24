@@ -51,8 +51,10 @@ local function issueHandler(username, message, args)
 		["list"] = function()
 			local jsonText = ""
 			if (args[3] ~= nil) then
+				functions.debug("Retrieving issues by type.")
 				jsonText = data.getIssuesByType(getAuthLevel(username), args[3])
 			else
+				functions.debug("Retrieving all issues.")
 				jsonText = data.getIssues(getAuthLevel(username))
 			end
 
