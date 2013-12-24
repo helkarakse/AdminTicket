@@ -45,6 +45,7 @@ local function getAuthLevel(username)
 end
 
 -- Command Handlers
+-- Issue handler
 local function issueHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
@@ -53,11 +54,39 @@ local function issueHandler(username, message, args)
 			if (array.success) then
 				sendMessage(username, "Listing available issues:")
 				for i = 1, functions.getTableCount(array.result) do
-					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " [" .. array.result[i].create_date .. "]")
+					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " - " .. array.result[i].time_ago .. "")
 				end
 			else
 				sendMessage(username, data.error.apiFailed)
 			end
+		end,
+		["help"] = function()
+			local helpArray = {
+				data.commandPrefix .. "issue list - Lists all the currently available issues.",
+				data.commandPrefix .. "issue list <type> - Lists all the tickets of type: new, progress, closed, cancelled",
+				data.commandPrefix .. "issue show <id> - Displays detailed information of a ticket. Use the id from " .. data.commandPrefix .. "issue list"
+			}
+
+			sendMessage(username, "Displaying help for issue")
+			for i = 1, #helpArray do
+				sendMessage(username, helpArray[i])
+			end
+		end,
+		default = function()
+			-- respond that the command is not found
+			sendMessage(username, data.error.commandNotFound)
+		end,
+	}
+
+	check:case(args[2])
+end
+
+-- Authentication handler
+local function authHandler(username, message, args)
+	local check = switch {
+		["list"] = function()
+		end,
+		["help"] = function()
 		end,
 		default = function()
 			-- respond that the command is not found
@@ -74,13 +103,22 @@ local chatEvent = function()
 		local _, username, message = os.pullEvent("chat_message")
 		-- check if the message is prefixed with a double // and that the user has the right auth level
 		if (message ~= nil) then
-			functions.debug("Authentication level of", username, "is", getAuthLevel(username))
-			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix and getAuthLevel(username) > 0) then
+			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix) then
 				-- strip the slash off the message and explode for args
 				-- replace spaces with + (spaces are not working for some reason)
 				local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
 				if (args[1] ~= "" and args[1] == "issue") then
-					issueHandler(username, message, args)
+					if (getAuthLevel(username) >= 1) then
+						issueHandler(username, message, args)
+					else
+						sendMessage(username, data.error.invalidAuthLevel)
+					end
+				elseif (args[1] ~= "" and args[1] == "auth") then
+					if (getAuthLevel(username) >= 2) then
+						authHandler(username, message, args)
+					else
+						sendMessage(username, data.error.invalidAuthLevel)
+					end
 				end
 			end
 		end
@@ -96,7 +134,7 @@ local authLoop = function()
 		if (array.success) then
 			authArray = array.result
 		end
-		sleep(60)
+		sleep(300)
 	end
 end
 
@@ -114,3 +152,4 @@ local function main()
 	parallel.waitForAll(chatEvent, authLoop)
 end
 
+main()
