@@ -75,16 +75,16 @@ local chatEvent = function()
 		-- check if the message is prefixed with a double // and that the user has the right auth level
 		if (message ~= nil) then
 			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix) then
-				if (getAuthLevel(username) > 0) then
-					-- strip the slash off the message and explode for args
-					-- replace spaces with + (spaces are not working for some reason)
-					local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
-					if (args[1] ~= "" and args[1] == "issue") then
+				-- strip the slash off the message and explode for args
+				-- replace spaces with + (spaces are not working for some reason)
+				local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
+				if (args[1] ~= "" and args[1] == "issue") then
+					if (getAuthLevel(username) > 0) then
 						issueHandler(username, message, args)
+					else
+						sendMessage(username, data.error.invalidAuthLevel)
 					end
 				end
-			else
-				sendMessage(username, data.error.invalidAuthLevel)
 			end
 		end
 	end
