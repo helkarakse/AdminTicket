@@ -53,7 +53,7 @@ local function issueHandler(username, message, args)
 			if (array.success) then
 				sendMessage(username, "Listing available issues:")
 				for i = 1, functions.getTableCount(array.result) do
-					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " [" .. array.result[i].create_date .. "]")
+					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " [" .. array.result[i].time_ago .. "]")
 				end
 			else
 				sendMessage(username, data.error.apiFailed)
