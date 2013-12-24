@@ -62,8 +62,14 @@ local function issueHandler(username, message, args)
 		["help"] = function()
 			local helpArray = {
 				data.commandPrefix .. "issue list - Lists all the currently available issues.",
-				data.commandPrefix .. "issue "
+				data.commandPrefix .. "issue list <type> - Lists all the tickets of type: new, progress, closed, cancelled",
+				data.commandPrefix .. "issue show <id> - Displays detailed information of a ticket. Use the id from " .. data.commandPrefix .. "issue list"
 			}
+
+			sendMessage(username, "Displaying help for issue")
+			for i = 1, #helpArray do
+				sendMessage(username, helpArray[i])
+			end
 		end,
 		default = function()
 			-- respond that the command is not found
