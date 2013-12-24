@@ -74,6 +74,7 @@ local chatEvent = function()
 		local _, username, message = os.pullEvent("chat_message")
 		-- check if the message is prefixed with a double // and that the user has the right auth level
 		if (message ~= nil) then
+			functions.debug("Authentication level of", username, "is", getAuthLevel(username))
 			if (string.sub(message, 1, string.len(data.commandPrefix)) == data.commandPrefix and getAuthLevel(username) > 0) then
 				-- strip the slash off the message and explode for args
 				-- replace spaces with + (spaces are not working for some reason)
