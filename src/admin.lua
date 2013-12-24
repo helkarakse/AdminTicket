@@ -59,7 +59,7 @@ local function issueHandler(username, message, args)
 			end
 
 			local array = json.decode(jsonText)
-			if (array.success) then
+			if (array.success and functions.getTableCount(array.result) > 0) then
 				sendMessage(username, "Listing available issues:")
 				for i = 1, functions.getTableCount(array.result) do
 					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " - " .. array.result[i].time_ago)
@@ -72,7 +72,7 @@ local function issueHandler(username, message, args)
 			if (args[3] ~= nil and args[3] ~= "") then
 				local jsonText = data.getIssueDetails(getAuthLevel(username), args[3])
 				local array = json.decode(jsonText)
-				if (array.success) then
+				if (array.success and functions.getTableCount(array.result) > 0) then
 					sendMessage(username, "Displaying details for issue: #" .. args[3])
 					for key, value in pairs(array.result[1]) do
 						sendMessage(username, "[" .. functions.ucFirst(key) .. "]: " .. value)
