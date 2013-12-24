@@ -53,11 +53,17 @@ local function issueHandler(username, message, args)
 			if (array.success) then
 				sendMessage(username, "Listing available issues:")
 				for i = 1, functions.getTableCount(array.result) do
-					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " [" .. array.result[i].time_ago .. "]")
+					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " - " .. array.result[i].time_ago .. "")
 				end
 			else
 				sendMessage(username, data.error.apiFailed)
 			end
+		end,
+		["help"] = function()
+			local helpArray = {
+				data.commandPrefix .. "issue list - Lists all the currently available issues.",
+				data.commandPrefix .. "issue "
+			}
 		end,
 		default = function()
 			-- respond that the command is not found
@@ -99,7 +105,7 @@ local authLoop = function()
 		if (array.success) then
 			authArray = array.result
 		end
-		sleep(60)
+		sleep(300)
 	end
 end
 
