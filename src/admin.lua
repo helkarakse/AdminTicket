@@ -45,6 +45,7 @@ local function getAuthLevel(username)
 end
 
 -- Command Handlers
+-- Issue handler
 local function issueHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
@@ -80,6 +81,22 @@ local function issueHandler(username, message, args)
 	check:case(args[2])
 end
 
+-- Authentication handler
+local function authHandler(username, message, args)
+	local check = switch {
+		["list"] = function()
+		end,
+		["help"] = function()
+		end,
+		default = function()
+			-- respond that the command is not found
+			sendMessage(username, data.error.commandNotFound)
+		end,
+	}
+
+	check:case(args[2])
+end
+
 -- Event Handlers
 local chatEvent = function()
 	while true do
@@ -91,8 +108,14 @@ local chatEvent = function()
 				-- replace spaces with + (spaces are not working for some reason)
 				local args = functions.explode("+", string.gsub(common.stripPrefix(message), " ", "+"))
 				if (args[1] ~= "" and args[1] == "issue") then
-					if (getAuthLevel(username) > 0) then
+					if (getAuthLevel(username) >= 1) then
 						issueHandler(username, message, args)
+					else
+						sendMessage(username, data.error.invalidAuthLevel)
+					end
+				elseif (args[1] ~= "" and args[1] == "auth") then
+					if (getAuthLevel(username) >= 2) then
+						authHandler(username, message, args)
 					else
 						sendMessage(username, data.error.invalidAuthLevel)
 					end
