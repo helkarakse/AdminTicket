@@ -44,6 +44,17 @@ local function getAuthLevel(username)
 	return 0
 end
 
+local function roundNum(number)
+	local returnString = ""
+	local startPos, endPos = string.find(tostring(number), ".")
+	if (startPos ~= nil and endPos ~= nil) then
+		returnString = string.sub(tostring(number), startPos, endPos - 1)
+	else
+		returnString = tostring(number)
+	end
+	return returnString
+end
+
 -- Command Handlers
 -- Issue handler
 local function issueHandler(username, message, args)
@@ -70,7 +81,8 @@ local function issueHandler(username, message, args)
 			if (array.success and functions.getTableCount(array.result) > 0) then
 				sendMessage(username, "Listing available issues:")
 				for i = 1, functions.getTableCount(array.result) do
-					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " - " .. array.result[i].time_ago)
+					-- sample - #1: name - 5 hours ago
+					sendMessage(username, "#" ..array.result[i].id .. ": " .. array.result[i].creator .. " - " .. array.result[i].time_ago)
 				end
 			else
 				sendMessage(username, data.error.noResults)
@@ -85,8 +97,17 @@ local function issueHandler(username, message, args)
 				local array = json.decode(jsonText)
 				if (array.success and functions.getTableCount(array.result) > 0) then
 					sendMessage(username, "Displaying details for issue: #" .. args[3])
-					for key, value in pairs(array.result[1]) do
-						sendMessage(username, "[" .. functions.ucFirst(key) .. "]: " .. value)
+					local row = array.result[1]
+					local xPos, yPos, zPos, dimId, serverId = string.match(row.position, "(.*)\,(.*)\,(.*)\:(.*)\:(.*)")
+					sendMessage(username, "#" .. row.id .. " @ " .. roundNum(xPos) .. ", " .. roundNum(yPos) .. ", " .. roundNum(zPos)
+						.. " - " .. common.getDimension(dimId) .. "(" .. dimId .. ") - RR" .. serverId)
+					sendMessage(username, "Created by: " .. row.creator .. " - " .. row.time_ago)
+					sendMessage(username, "Description: " .. row.description)
+					sendMessage(username, "Status: " .. row.status)
+
+					-- display assigned to if status is progress
+					if (row.status == "progress") then
+						sendMessage(username, "Assigned to: " .. row.assigned)
 					end
 				else
 					sendMessage(username, data.error.noResults)
