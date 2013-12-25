@@ -73,7 +73,7 @@ local function issueHandler(username, message, args)
 					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " - " .. array.result[i].time_ago)
 				end
 			else
-				sendMessage(username, data.error.apiFailed)
+				sendMessage(username, data.error.noResults)
 			end
 		end,
 		["show"] = function()
