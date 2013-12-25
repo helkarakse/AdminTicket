@@ -28,6 +28,7 @@ error.apiFailed = "Error 11: API failed to return data. Notify a developer immed
 error.commandNotFound = "Error 90: Command not found."
 error.invalidAuthLevel = "Error 91: Invalid authentication level. This has been logged."
 error.missingArgs = "Error 12: Arguments are missing. Please check your syntax."
+error.noResults = "No results returned."
 
 -- Misc
 commandPrefix = "//"

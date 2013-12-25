@@ -50,10 +50,18 @@ local function issueHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
 			local jsonText = ""
-			if (args[3] ~= nil and args[3] ~= "") then
-				functions.debug("Retrieving issues by type.")
-				jsonText = data.getIssuesByType(getAuthLevel(username), args[3])
+			local status = args[3]
+			if (status ~= nil and status ~= "") then
+				-- make sure that status is not nil and not empty
+				if (status == "new" or status == "progress" or status == "complete" or status == "cancel") then
+					-- check to see that status is of a type that will return data
+					functions.debug("Retrieving issues by type.")
+					jsonText = data.getIssuesByType(getAuthLevel(username), status)
+				else
+					sendMessage(username, "Invalid usage: status must be 'new', 'progress', 'complete' or 'cancel'")
+				end
 			else
+				-- no status so retrieve it all
 				functions.debug("Retrieving all issues.")
 				jsonText = data.getIssues(getAuthLevel(username))
 			end
@@ -69,7 +77,10 @@ local function issueHandler(username, message, args)
 			end
 		end,
 		["show"] = function()
-			if (args[3] ~= nil and args[3] ~= "") then
+			-- display details about a ticket
+			local id = args[3]
+			if (id ~= nil and id ~= "") then
+				-- make sure id is not nil and not empty
 				local jsonText = data.getIssueDetails(getAuthLevel(username), args[3])
 				local array = json.decode(jsonText)
 				if (array.success and functions.getTableCount(array.result) > 0) then
@@ -78,7 +89,7 @@ local function issueHandler(username, message, args)
 						sendMessage(username, "[" .. functions.ucFirst(key) .. "]: " .. value)
 					end
 				else
-					sendMessage(username, data.error.apiFailed)
+					sendMessage(username, data.error.noResults)
 				end
 			else
 				sendMessage(username, data.error.missingArgs)
