@@ -39,9 +39,9 @@ function stripPrefix(message)
 end
 
 function getDimension(dimId)
-	for key, value in pairs(dimArray) do
-		if (value.dimensionId == dimId) then
-			return value.dimensionName
+	for i = 1, #dimArray do
+		if (dimArray[i].dimensionId == tonumber(dimId)) then
+			return dimArray[i].dimensionName
 		end
 	end
 	return "Unknown"
