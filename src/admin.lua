@@ -99,7 +99,7 @@ local function issueHandler(username, message, args)
 					sendMessage(username, "Displaying details for issue: #" .. args[3])
 					local row = array.result[1]
 					local xPos, yPos, zPos, dimId, serverId = string.match(row.position, "(.*)\,(.*)\,(.*)\:(.*)\:(.*)")
-					sendMessage(username, "#" .. row.id .. " @ " .. roundNum(xPos) .. ", " .. roundNum(yPos) .. ", " .. roundNum(zPos)
+					sendMessage(username, "#" .. row.id .. " @ " .. xPos .. ", " .. yPos .. ", " .. zPos
 						.. " - " .. common.getDimension(dimId) .. "(" .. dimId .. ") - RR" .. serverId)
 					sendMessage(username, "Created by: " .. row.creator .. " - " .. row.time_ago)
 					sendMessage(username, "Description: " .. row.description)
