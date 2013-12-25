@@ -44,20 +44,76 @@ local function getAuthLevel(username)
 	return 0
 end
 
+local function roundNum(number)
+	local returnString = ""
+	local startPos, endPos = string.find(tostring(number), ".")
+	if (startPos ~= nil and endPos ~= nil) then
+		returnString = string.sub(tostring(number), startPos, endPos - 1)
+	else
+		returnString = tostring(number)
+	end
+	return returnString
+end
+
 -- Command Handlers
 -- Issue handler
 local function issueHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
-			local jsonText = data.getIssues(getAuthLevel(username))
-			local array = json.decode(jsonText)
-			if (array.success) then
-				sendMessage(username, "Listing available issues:")
-				for i = 1, functions.getTableCount(array.result) do
-					sendMessage(username, "[" ..array.result[i].id .. "]: " .. array.result[i].creator .. " - " .. array.result[i].time_ago .. "")
+			local jsonText = ""
+			local status = args[3]
+			if (status ~= nil and status ~= "") then
+				-- make sure that status is not nil and not empty
+				if (status == "new" or status == "progress" or status == "complete" or status == "cancel") then
+					-- check to see that status is of a type that will return data
+					functions.debug("Retrieving issues by type.")
+					jsonText = data.getIssuesByType(getAuthLevel(username), status)
+				else
+					sendMessage(username, "Invalid usage: status must be 'new', 'progress', 'complete' or 'cancel'")
 				end
 			else
-				sendMessage(username, data.error.apiFailed)
+				-- no status so retrieve it all
+				functions.debug("Retrieving all issues.")
+				jsonText = data.getIssues(getAuthLevel(username))
+			end
+
+			local array = json.decode(jsonText)
+			if (array.success and functions.getTableCount(array.result) > 0) then
+				sendMessage(username, "Listing available issues:")
+				for i = 1, functions.getTableCount(array.result) do
+					-- sample - #1: name - 5 hours ago
+					sendMessage(username, "#" ..array.result[i].id .. ": " .. array.result[i].creator .. " - " .. array.result[i].time_ago)
+				end
+			else
+				sendMessage(username, data.error.noResults)
+			end
+		end,
+		["show"] = function()
+			-- display details about a ticket
+			local id = args[3]
+			if (id ~= nil and id ~= "") then
+				-- make sure id is not nil and not empty
+				local jsonText = data.getIssueDetails(getAuthLevel(username), args[3])
+				local array = json.decode(jsonText)
+				if (array.success and functions.getTableCount(array.result) > 0) then
+					sendMessage(username, "Displaying details for issue: #" .. args[3])
+					local row = array.result[1]
+					local xPos, yPos, zPos, dimId, serverId = string.match(row.position, "(.*)\,(.*)\,(.*)\:(.*)\:(.*)")
+					sendMessage(username, "#" .. row.id .. " @ " .. functions.roundTo(xPos) .. ", " .. functions.roundTo(yPos) .. ", " .. functions.roundTo(zPos)
+						.. " - " .. common.getDimension(dimId) .. "(" .. dimId .. ") - RR" .. serverId)
+					sendMessage(username, "Created by: " .. row.creator .. " - " .. row.time_ago)
+					sendMessage(username, "Description: " .. row.description)
+					sendMessage(username, "Status: " .. row.status)
+
+					-- display assigned to if status is progress
+					if (row.status == "progress") then
+						sendMessage(username, "Assigned to: " .. row.assigned)
+					end
+				else
+					sendMessage(username, data.error.noResults)
+				end
+			else
+				sendMessage(username, data.error.missingArgs)
 			end
 		end,
 		["help"] = function()

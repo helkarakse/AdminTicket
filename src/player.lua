@@ -42,13 +42,13 @@ end
 
 -- checks if the user has a ticket that is being created
 local function hasTicket(username)
-  for key, value in pairs(ticketArray) do
-    if (value.creator == username) then
-      return true
-    end
-  end
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			return true
+		end
+	end
 
-  return false
+	return false
 
 end
 
@@ -69,13 +69,13 @@ end
 
 -- sets the description of the user's currently active ticket
 local function setTicketDescription(username, description)
-  for key, value in pairs(ticketArray) do
-    if (value.creator == username) then
-      value.description = description
-    end
-  end
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			value.description = description
+		end
+	end
 
-  return data.lang.noTicket
+	return data.lang.noTicket
 end
 
 -- checks if the ticket is valid (ie has a description)
@@ -90,27 +90,27 @@ end
 
 -- returns the ticket row from the ticket array for username, nil if failed
 local function getTicket(username)
-  for key, value in pairs(ticketArray) do
-    if (value.creator == username) then
-      return ticketArray[key]
-    end
-  end
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			return ticketArray[key]
+		end
+	end
 
-  return nil
+	return nil
 end
 
 -- deletes a ticket from the array
 local function removeTicket(username)
-  local userKey
-  for key, value in pairs(ticketArray) do
-    if (value.creator == username) then
-      userKey = key
-    end
-  end
+	local userKey
+	for key, value in pairs(ticketArray) do
+		if (value.creator == username) then
+			userKey = key
+		end
+	end
 
-  if (userKey ~= nil and userKey > 0) then
-    table.remove(ticketArray, userKey)
-  end
+	if (userKey ~= nil and userKey > 0) then
+		table.remove(ticketArray, userKey)
+	end
 
 end
 
@@ -308,3 +308,4 @@ local function main()
 	parallel.waitForAll(chatEvent, loginEvent)
 end
 
+main()

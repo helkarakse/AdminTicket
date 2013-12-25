@@ -27,6 +27,8 @@ error.submitFailed = "Error 10: Failed to send ticket. Notify a developer immedi
 error.apiFailed = "Error 11: API failed to return data. Notify a developer immediately."
 error.commandNotFound = "Error 90: Command not found."
 error.invalidAuthLevel = "Error 91: Invalid authentication level. This has been logged."
+error.missingArgs = "Error 12: Arguments are missing. Please check your syntax."
+error.noResults = "No results returned."
 
 -- Misc
 commandPrefix = "//"
@@ -100,7 +102,17 @@ end
 -- Issues
 function getIssues(authLevel)
 	local url = basePath .. "ticket.php?cmd=get_issues"
-	return doGetPost(url, "auth_level=" .. authLevel, true)
+	return doGetPost(url, "auth_level=" .. authLevel)
+end
+
+function getIssuesByType(authLevel, status)
+	local url = basePath .. "ticket.php?cmd=get_issues_by_type"
+	return doGetPost(url, "auth_level=" .. authLevel .. "&status=" .. status)
+end
+
+function getIssueDetails(authLevel, id)
+	local url = basePath .. "ticket.php?cmd=get_issue_details"
+	return doGetPost(url, "auth_level=" .. authLevel .. "&id=" .. id, true)
 end
 
 -- Auth
