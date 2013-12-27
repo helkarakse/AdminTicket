@@ -33,9 +33,14 @@ error.noResults = "No results returned."
 -- Misc
 commandPrefix = "//"
 
-local basePath = "http://dev.otegamers.com/helkarakse/ticket/"
+local basePath = "http://dev.otegamers.com/helkarakse/index.php"
 
 -- Functions
+-- URL builder
+local function buildUrl(controller, method)
+	return basePath .. "?c=" .. controller .. "&m=" .. method
+end
+
 -- HTTP
 -- sends data to a url that requires post params
 local function doPost(url, data, debug)
@@ -85,29 +90,24 @@ end
 
 -- Ticket
 function addTicket(creator, description, position)
-	local url = basePath .. "ticket.php?cmd=add_ticket"
-	return doPost(url, "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
+	return doPost(buildUrl("ticket", "add_ticket"), "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
 end
 
 function getMyTickets(username)
-	local url = basePath .. "ticket.php?cmd=get_my_tickets"
-	return doGetPost(url, "name=" .. username)
+	return doGetPost(buildUrl("ticket", "get_tickets"), "name=" .. username)
 end
 
 function countMyTickets(username)
-	local url = basePath .. "ticket.php?cmd=get_my_ticket_count"
-	return doGetPost(url, "name=" .. username)
+	return doGetPost(buildUrl("ticket", "get_ticket_count"), "name=" .. username)
 end
 
 -- Issues
 function getIssues(authLevel)
-	local url = basePath .. "ticket.php?cmd=get_issues"
-	return doGetPost(url, "auth_level=" .. authLevel)
+	return doGetPost(buildUrl("ticket", "get_issues"), "auth_level=" .. authLevel)
 end
 
 function getIssuesByType(authLevel, status)
-	local url = basePath .. "ticket.php?cmd=get_issues_by_type"
-	return doGetPost(url, "auth_level=" .. authLevel .. "&status=" .. status)
+	return doGetPost(buildUrl("ticket", "get_issues"), "auth_level=" .. authLevel .. "&status=" .. status)
 end
 
 function getIssueDetails(authLevel, id)
