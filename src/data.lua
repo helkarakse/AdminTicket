@@ -94,11 +94,11 @@ function addTicket(creator, description, position)
 end
 
 function getMyTickets(username)
-	return doGetPost(buildUrl("ticket", "get_tickets"), "name=" .. username)
+	return doGetPost(buildUrl("ticket", "get_user_tickets"), "name=" .. username)
 end
 
 function countMyTickets(username)
-	return doGetPost(buildUrl("ticket", "get_ticket_count"), "name=" .. username)
+	return doGetPost(buildUrl("ticket", "get_user_ticket_count"), "name=" .. username)
 end
 
 -- Issues
