@@ -161,7 +161,7 @@ local function authHandler(username, message, args)
 		["add"] = function()
 			local name, level = args[3], args[4]
 			if ((name ~= nil and name ~= "") and (level ~= nil and level ~= "")) then
-				if (type(level) == "number") then
+				if (type(tonumber(level)) == "number") then
 					local jsonText = data.addAuth(name, level)
 					local array = json.decode(jsonText)
 					if (array.success) then
@@ -179,7 +179,7 @@ local function authHandler(username, message, args)
 		["set"] = function()
 			local name, level = args[3], args[4]
 			if ((name ~= nil and name ~= "") and (level ~= nil and level ~= "")) then
-				if (type(level) == "number") then
+				if (type(tonumber(level)) == "number") then
 					local jsonText = data.setAuth(name, level)
 					local array = json.decode(jsonText)
 					if (array.success) then
