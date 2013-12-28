@@ -161,12 +161,16 @@ local function authHandler(username, message, args)
 		["add"] = function()
 			local name, level = args[3], args[4]
 			if ((name ~= nil and name ~= "") and (level ~= nil and level ~= "")) then
-				local jsonText = data.addAuth(name, level)
-				local array = json.decode(jsonText)
-				if (array.success) then
-					sendMessage(username, "New user added to authentication table. Use //auth reload to reload the package.")
+				if (type(level) == "number") then
+					local jsonText = data.addAuth(name, level)
+					local array = json.decode(jsonText)
+					if (array.success) then
+						sendMessage(username, "New user added to authentication table. Use //auth reload to reload the package.")
+					else
+						sendMessage(username, data.error.apiFailed)
+					end
 				else
-					sendMessage(username, data.error.apiFailed)
+					sendMessage(username, "Level must be a number!")
 				end
 			else
 				sendMessage(username, data.error.missingArgs)
@@ -175,12 +179,16 @@ local function authHandler(username, message, args)
 		["set"] = function()
 			local name, level = args[3], args[4]
 			if ((name ~= nil and name ~= "") and (level ~= nil and level ~= "")) then
-				local jsonText = data.setAuth(name, level)
-				local array = json.decode(jsonText)
-				if (array.success) then
-					sendMessage(username, "User level updated. Use //auth reload to reload the package.")
+				if (type(level) == "number") then
+					local jsonText = data.setAuth(name, level)
+					local array = json.decode(jsonText)
+					if (array.success) then
+						sendMessage(username, "User level updated. Use //auth reload to reload the package.")
+					else
+						sendMessage(username, data.error.apiFailed)
+					end
 				else
-					sendMessage(username, data.error.apiFailed)
+					sendMessage(username, "Level must be a number!")
 				end
 			else
 				sendMessage(username, data.error.missingArgs)
