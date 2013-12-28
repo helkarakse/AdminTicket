@@ -37,7 +37,7 @@ end
 local function getAuthLevel(username)
 	for i = 1, functions.getTableCount(authArray) do
 		if (authArray[i].name == username) then
-			return authArray[i].auth_level
+			return authArray[i].level
 		end
 	end
 	functions.info("Auth level not found for this username:", username)
@@ -53,22 +53,6 @@ local function roundNum(number)
 		returnString = tostring(number)
 	end
 	return returnString
-end
-
--- checks if the username is a developer for authentication purposes
-local function isDev(username)
-	local jsonText = data.getAuth(username)
-	local array = json.decode(jsonText)
-	if (array.success) then
-		local authLevel = array.result.level
-		if (array.result.level == 3) then
-			return true
-		else
-			return false
-		end
-	else
-		return false
-	end
 end
 
 -- Command Handlers
@@ -145,7 +129,7 @@ local function issueHandler(username, message, args)
 			end
 		end,
 		["reboot"] = function()
-			if (isDev(username)) then
+			if (getAuthLevel(username) == 3) then
 				sendMessage(username, data.lang.reboot)
 				os.reboot()
 			else
