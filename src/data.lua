@@ -92,7 +92,7 @@ end
 
 -- Ticket
 function addTicket(creator, description, position)
-	return doPost(buildUrl("ticket", "add_ticket"), "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position), true)
+	return doPost(buildUrl("ticket", "add_ticket"), "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
 end
 
 function getMyTickets(username)
@@ -125,4 +125,17 @@ end
 -- Returns a full list of the auth table
 function getAuthArray()
 	return doGet(buildUrl("auth", "get_auth_package"))
+end
+
+-- Sets the auth level of a username
+function setAuth(username, level)
+	return doGetPost(buildUrl("auth", "set_auth"), "name=" .. username .. "&level" .. level)
+end
+
+function delAuth(username)
+	return doGetPost(buildUrl("auth", "delete_user"), "name=" .. username)
+end
+
+function addAuth(username, level)
+	return doGetPost(buildUrl("auth", "add_user"), "name=" .. username .. "&level" .. level)
 end
