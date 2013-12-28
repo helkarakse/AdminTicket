@@ -133,6 +133,22 @@ local function doSubmitTicket(username)
 	end
 end
 
+-- checks if the username is a developer for authentication purposes
+local function isDev(username)
+	local jsonText = data.getAuth(username)
+	local array = json.decode(jsonText)
+	if (array.success) then
+		local authLevel = array.result.level
+		if (array.result.level == 3) then
+			return true
+		else
+			return false
+		end
+	else
+		return false
+	end
+end
+
 -- Command Handlers
 local function ticketHandler(username, message, args)
 	local check = switch {
@@ -223,7 +239,8 @@ local function ticketHandler(username, message, args)
 				if (functions.getTableCount(array.result) > 0) then
 					sendMessage(username, data.lang.myTickets)
 					for i = 1, functions.getTableCount(array.result) do
-						sendMessage(username, "["..i.."]: " .. array.result[i].description .. " [" .. string.upper(array.result[i].status) .. "]")
+						sendMessage(username, "#" .. i .. " (" .. array.result[i].status .. ") - " .. functions.truncate(array.result[i].description, 25) ..
+							" - " .. array.result[i].time_ago)
 					end
 				else
 					sendMessage(username, data.lang.noTicketsFound)
@@ -235,6 +252,14 @@ local function ticketHandler(username, message, args)
 		["help"] = function()
 			-- ticket based help
 			sendMessage(username, "Ticket help should go here.")
+		end,
+		["reboot"] = function()
+			if (isDev(username)) then
+				sendMessage(username, data.lang.reboot)
+				os.reboot()
+			else
+				sendMessage(username, data.error.needAuth)
+			end
 		end,
 		default = function()
 			-- respond that the command is not recognized

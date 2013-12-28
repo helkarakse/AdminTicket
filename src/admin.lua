@@ -37,7 +37,7 @@ end
 local function getAuthLevel(username)
 	for i = 1, functions.getTableCount(authArray) do
 		if (authArray[i].name == username) then
-			return authArray[i].auth_level
+			return authArray[i].level
 		end
 	end
 	functions.info("Auth level not found for this username:", username)
@@ -128,6 +128,14 @@ local function issueHandler(username, message, args)
 				sendMessage(username, helpArray[i])
 			end
 		end,
+		["reboot"] = function()
+			if (getAuthLevel(username) == 3) then
+				sendMessage(username, data.lang.reboot)
+				os.reboot()
+			else
+				sendMessage(username, data.error.needAuth)
+			end
+		end,
 		default = function()
 			-- respond that the command is not found
 			sendMessage(username, data.error.commandNotFound)
@@ -141,6 +149,72 @@ end
 local function authHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
+			functions.info("Listing authentication from server.")
+			local jsonText = data.getAuthArray()
+			local array = json.decode(jsonText)
+			if (array.success and functions.getTableCount(array.result) > 0) then
+				for i = 1, functions.getTableCount(array.result) do
+					sendMessage(username, "#" .. array.result[i].rowid .. " - " .. array.result[i].name .. " [" .. array.result[i].rank .. " (" .. array.result[i].level .. ")]")
+				end
+			end
+		end,
+		["add"] = function()
+			local name, level = args[3], args[4]
+			if ((name ~= nil and name ~= "") and (level ~= nil and level ~= "")) then
+				if (type(tonumber(level)) == "number") then
+					local jsonText = data.addAuth(name, level)
+					local array = json.decode(jsonText)
+					if (array.success) then
+						sendMessage(username, "New user added to authentication table. Use //auth reload to reload the package.")
+					else
+						sendMessage(username, data.error.apiFailed)
+					end
+				else
+					sendMessage(username, "Level must be a number!")
+				end
+			else
+				sendMessage(username, data.error.missingArgs)
+			end
+		end,
+		["set"] = function()
+			local name, level = args[3], args[4]
+			if ((name ~= nil and name ~= "") and (level ~= nil and level ~= "")) then
+				if (type(tonumber(level)) == "number") then
+					local jsonText = data.setAuth(name, level)
+					local array = json.decode(jsonText)
+					if (array.success) then
+						sendMessage(username, "User level updated. Use //auth reload to reload the package.")
+					else
+						sendMessage(username, data.error.apiFailed)
+					end
+				else
+					sendMessage(username, "Level must be a number!")
+				end
+			else
+				sendMessage(username, data.error.missingArgs)
+			end
+		end,
+		["del"] = function()
+			local name = args[3]
+			if (name ~= nil and name ~= "") then
+				local jsonText = data.delAuth(name)
+				local array = json.decode(jsonText)
+				if (array.success) then
+					sendMessage(username, "User deleted. Use //auth reload to reload the package.")
+				else
+					sendMessage(username, data.error.apiFailed)
+				end
+			else
+				sendMessage(username, data.error.missingArgs)
+			end
+		end,
+		["reload"] = function()
+			functions.info("Reloading authentication package from server.")
+			local jsonText = data.getAuthArray()
+			local array = json.decode(jsonText)
+			if (array.success) then
+				authArray = array.result
+			end
 		end,
 		["help"] = function()
 		end,
