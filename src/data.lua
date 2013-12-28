@@ -111,19 +111,16 @@ function getIssuesByType(authLevel, status)
 end
 
 function getIssueDetails(authLevel, id)
-	local url = basePath .. "ticket.php?cmd=get_issue_details"
-	return doGetPost(url, "auth_level=" .. authLevel .. "&id=" .. id, true)
+	return doGetPost(buildUrl("ticket", "get_issue_details"), "auth_level=" .. authLevel .. "&id=" .. id, true)
 end
 
 -- Auth
 -- Returns the auth level for a username
 function getAuth(username)
-	local url = basePath .. "auth.php?cmd=get_auth"
-	return doGetPost(url, "name=" .. username)
+	return doGetPost(buildUrl("auth", "get_auth"), "name=" .. username)
 end
 
 -- Returns a full list of the auth table
 function getAuthArray()
-	local url = basePath .. "auth.php?cmd=get_auth_array"
-	return doGet(url)
+	return doGet(buildUrl("auth", "get_auth_package"))
 end
