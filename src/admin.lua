@@ -183,7 +183,16 @@ local function authHandler(username, message, args)
 			end
 		end,
 		["del"] = function()
-
+			local name = args[3]
+			if (name ~= nil and name ~= "") then
+				local jsonText = data.delAuth(name)
+				local array = json.decode(jsonText)
+				if (array.success) then
+					sendMessage(username, "User deleted. Use //auth reload to reload the package.")
+				else
+					sendMessage(username, data.error.apiFailed)
+				end
+			end
 		end,
 		["reload"] = function()
 			functions.info("Loading authentication package from server.")
