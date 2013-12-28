@@ -209,7 +209,7 @@ local function authHandler(username, message, args)
 			end
 		end,
 		["reload"] = function()
-			functions.info("Loading authentication package from server.")
+			functions.info("Reloading authentication package from server.")
 			local jsonText = data.getAuthArray()
 			local array = json.decode(jsonText)
 			if (array.success) then
