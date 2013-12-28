@@ -168,6 +168,8 @@ local function authHandler(username, message, args)
 				else
 					sendMessage(username, data.error.apiFailed)
 				end
+			else
+				sendMessage(username, data.error.missingArgs)
 			end
 		end,
 		["set"] = function()
@@ -180,6 +182,8 @@ local function authHandler(username, message, args)
 				else
 					sendMessage(username, data.error.apiFailed)
 				end
+			else
+				sendMessage(username, data.error.missingArgs)
 			end
 		end,
 		["del"] = function()
@@ -192,6 +196,8 @@ local function authHandler(username, message, args)
 				else
 					sendMessage(username, data.error.apiFailed)
 				end
+			else
+				sendMessage(username, data.error.missingArgs)
 			end
 		end,
 		["reload"] = function()
