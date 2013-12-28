@@ -55,6 +55,22 @@ local function roundNum(number)
 	return returnString
 end
 
+-- checks if the username is a developer for authentication purposes
+local function isDev(username)
+	local jsonText = data.getAuth(username)
+	local array = json.decode(jsonText)
+	if (array.success) then
+		local authLevel = array.result.level
+		if (array.result.level == 3) then
+			return true
+		else
+			return false
+		end
+	else
+		return false
+	end
+end
+
 -- Command Handlers
 -- Issue handler
 local function issueHandler(username, message, args)
@@ -126,6 +142,14 @@ local function issueHandler(username, message, args)
 			sendMessage(username, "Displaying help for issue")
 			for i = 1, #helpArray do
 				sendMessage(username, helpArray[i])
+			end
+		end,
+		["reboot"] = function()
+			if (isDev(username)) then
+				sendMessage(username, data.lang.reboot)
+				os.reboot()
+			else
+				sendMessage(username, data.error.needAuth)
 			end
 		end,
 		default = function()
