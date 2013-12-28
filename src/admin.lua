@@ -149,6 +149,28 @@ end
 local function authHandler(username, message, args)
 	local check = switch {
 		["list"] = function()
+			functions.info("Listing authentication from server.")
+			local jsonText = data.getAuthArray()
+			local array = json.decode(jsonText)
+			if (array.success and functions.getTableCount(array.result) > 0) then
+				for i = 1, functions.getTableCount(array.result) do
+					sendMessage(username, "#" .. array.result[i].rowid .. " - " .. array.result[i].name .. " [" .. array.result[i].rank .. " (" .. array.result[i].level .. ")]")
+				end
+			end
+		end,
+		["add"] = function()
+		end,
+		["set"] = function()
+		end,
+		["del"] = function()
+		end,
+		["reload"] = function()
+			functions.info("Loading authentication package from server.")
+			local jsonText = data.getAuthArray()
+			local array = json.decode(jsonText)
+			if (array.success) then
+				authArray = array.result
+			end
 		end,
 		["help"] = function()
 		end,
