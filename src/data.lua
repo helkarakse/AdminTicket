@@ -124,5 +124,5 @@ end
 
 -- Returns a full list of the auth table
 function getAuthArray()
-	return doGet(buildUrl("auth", "get_auth_package"))
+	return doGet(buildUrl("auth", "get_auth_package"), true)
 end
