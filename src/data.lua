@@ -20,6 +20,7 @@ lang.submitSuccess = "Your ticket has been successfully submitted. A moderator w
 lang.myTickets = "Displaying my currently active tickets:"
 lang.noTicketsFound = "You have no active tickets at the moment."
 lang.loginMessage = "Welcome to the OTEGamers Ticket System."
+lang.reboot = "System is rebooting. Please wait."
 
 -- Errors
 error = {}
@@ -29,6 +30,7 @@ error.commandNotFound = "Error 90: Command not found."
 error.invalidAuthLevel = "Error 91: Invalid authentication level. This has been logged."
 error.missingArgs = "Error 12: Arguments are missing. Please check your syntax."
 error.noResults = "No results returned."
+error.needAuth = "You are not authorised to run this command."
 
 -- Misc
 commandPrefix = "//"

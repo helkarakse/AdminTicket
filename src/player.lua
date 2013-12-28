@@ -255,7 +255,10 @@ local function ticketHandler(username, message, args)
 		end,
 		["reboot"] = function()
 			if (isDev(username)) then
+				sendMessage(username, data.lang.reboot)
 				os.reboot()
+			else
+				sendMessage(username, data.error.needAuth)
 			end
 		end,
 		default = function()
