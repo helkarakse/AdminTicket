@@ -214,7 +214,11 @@ local function authHandler(username, message, args)
 			local array = json.decode(jsonText)
 			if (array.success) then
 				authArray = array.result
+				sendMessage(username, "Authentication reloaded")
+			else
+				sendMessage(username, "Failed to reload authentication")
 			end
+
 		end,
 		["help"] = function()
 		end,
