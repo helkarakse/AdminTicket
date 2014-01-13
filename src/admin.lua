@@ -154,7 +154,7 @@ local function authHandler(username, message, args)
 			local array = json.decode(jsonText)
 			if (array.success and functions.getTableCount(array.result) > 0) then
 				for i = 1, functions.getTableCount(array.result) do
-					sendMessage(username, "#" .. array.result[i].rowid .. " - " .. array.result[i].name .. " [" .. array.result[i].rank .. " (" .. array.result[i].level .. ")]")
+					sendMessage(username, "#" .. array.result[i].id .. " - " .. array.result[i].name .. " [" .. array.result[i].rank .. " (" .. array.result[i].level .. ")]")
 				end
 			end
 		end,
