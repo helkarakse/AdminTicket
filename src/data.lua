@@ -97,7 +97,7 @@ end
 
 -- Ticket
 function addTicket(creator, description, position)
-	return doPost(buildUrl("user", "add"), "name=" .. textutils.urlEncode(creator) .. "&desc=" .. textutils.urlEncode(description) .. "&pos=" .. textutils.urlEncode(position), true)
+	return doPost(buildUrl("user", "issue"), "name=" .. textutils.urlEncode(creator) .. "&desc=" .. textutils.urlEncode(description) .. "&pos=" .. textutils.urlEncode(position), true)
 end
 
 function getMyTickets(username)
