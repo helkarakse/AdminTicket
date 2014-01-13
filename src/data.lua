@@ -21,6 +21,7 @@ lang.myTickets = "Displaying my currently active tickets:"
 lang.noTicketsFound = "You have no active tickets at the moment."
 lang.loginMessage = "Welcome to the OTEGamers Ticket System."
 lang.reboot = "System is rebooting. Please wait."
+lang.ticketDeleted = "Ticket successfully deleted."
 
 -- Errors
 error = {}
@@ -31,6 +32,7 @@ error.invalidAuthLevel = "Error 91: Invalid authentication level. This has been 
 error.missingArgs = "Error 12: Arguments are missing. Please check your syntax."
 error.noResults = "No results returned."
 error.needAuth = "You are not authorised to run this command."
+error.wrongUser = "You are not the creator of this ticket."
 
 -- Misc
 commandPrefix = "//"
@@ -106,6 +108,10 @@ end
 
 function countMyTickets(username)
 	return doGet(buildUrl("user", "count", username), true)
+end
+
+function deleteMyTicket(id, username)
+	return doGet(buildUrl("user", "delete", id, username), true)
 end
 
 -- Issues
