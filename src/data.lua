@@ -140,13 +140,13 @@ end
 
 -- Sets the auth level of a username
 function setAuth(username, level)
-	return doGetPost(buildUrl("auth", "set_auth"), "name=" .. username .. "&level=" .. tostring(level))
+	return doGetPost(buildUrl("admin", "update"), "name=" .. username .. "&level=" .. tostring(level))
 end
 
 function delAuth(username)
-	return doGetPost(buildUrl("auth", "delete_user"), "name=" .. username)
+	return doGetPost(buildUrl("admin", "delete"), "name=" .. username)
 end
 
 function addAuth(username, level)
-	return doGetPost(buildUrl("auth", "add_user"), "name=" .. username .. "&level=" .. tostring(level))
+	return doGetPost(buildUrl("admin", "create"), "name=" .. username .. "&level=" .. tostring(level))
 end
