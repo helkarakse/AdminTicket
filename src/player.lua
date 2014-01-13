@@ -239,7 +239,7 @@ local function ticketHandler(username, message, args)
 				if (functions.getTableCount(array.result) > 0) then
 					sendMessage(username, data.lang.myTickets)
 					for i = 1, functions.getTableCount(array.result) do
-						sendMessage(username, "#" .. i .. " (" .. array.result[i].status .. ") - " .. functions.truncate(array.result[i].description, 25))
+						sendMessage(username, "#" .. array.result[i].id .. " (" .. array.result[i].status .. ") - " .. functions.truncate(array.result[i].description, 25))
 					end
 				else
 					sendMessage(username, data.lang.noTicketsFound)
