@@ -310,24 +310,14 @@ local loginEvent = function()
 		-- notify the user about tickets that are not currently completed
 		local jsonText = data.countMyTickets(username)
 		local array = json.decode(jsonText)
-		if (array.success and functions.getTableCount(array.result) > 0) then
-			-- only notify the user if there is some result to begin with
-			local countNew, countOpen, countTotal = 0, 0, 0
-			for i = 1, functions.getTableCount(array.result) do
-				if (array.result[i].status == "new") then
-					countNew = countNew + array.result[i].count
-				elseif(array.result[i].status == "open") then
-					countOpen = countOpen + array.result[i].count
-				end
+		if (array.success) then
+			if (array.result.total > 0) then
+				-- notify user after a second's pause to let messages filter to the end
+				functions.info(username,"has active tickets, sending counts.")
+				sleep(1)
+				sendMessage(username, data.lang.loginMessage)
+				sendMessage(username, "You have ["..array.result.total.."] tickets total. ["..array.result.new.."] are new, and ["..array.result.progress.."] are currently being processed.")
 			end
-
-			countTotal = countNew + countOpen
-
-			-- notify user after a second's pause to let messages filter to the end
-			functions.info(username,"has active tickets, sending counts.")
-			sleep(1)
-			sendMessage(username, data.lang.loginMessage)
-			sendMessage(username, "You have ["..countTotal.."] tickets total. ["..countNew.."] are new, and ["..countOpen.."] are currently being processed.")
 		end
 	end
 end

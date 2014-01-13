@@ -130,12 +130,12 @@ end
 -- Auth
 -- Returns the auth level for a username
 function getAuth(username)
-	return doGetPost(buildUrl("auth", "get_auth"), "name=" .. username)
+	return doGet(buildUrl("admin", "auth", username), true)
 end
 
 -- Returns a full list of the auth table
 function getAuthArray()
-	return doGet(buildUrl("auth", "get_auth_package"))
+	return doGet(buildUrl("admin", "auth"), true)
 end
 
 -- Sets the auth level of a username
