@@ -250,7 +250,7 @@ local function ticketHandler(username, message, args)
 		end,
 		["delete"] = function()
 			-- delete a ticket that has been created previously
-			if (args[3] ~= nil and args[3] ~= "" and type(args[3]) == "number") then
+			if (args[3] ~= nil and args[3] ~= "" and type(tonumber(args[3])) == "number") then
 				local jsonText = data.deleteMyTicket(args[3], username)
 				local array = json.decode(jsonText)
 				if (array.success) then
