@@ -35,12 +35,17 @@ error.needAuth = "You are not authorised to run this command."
 -- Misc
 commandPrefix = "//"
 
-local basePath = "http://dev.otegamers.com/helkarakse/index.php"
+local basePath = "http://dev.otegamers.com/api/v1/tracker"
 
 -- Functions
 -- URL builder
-local function buildUrl(controller, method)
-	return basePath .. "?c=" .. controller .. "&m=" .. method
+local function buildUrl(...)
+	local queryString = ""
+	for k, v in ipairs(arg) do
+		queryString = queryString .. "/" .. v
+	end
+
+	return basePath .. queryString
 end
 
 -- HTTP
@@ -92,15 +97,15 @@ end
 
 -- Ticket
 function addTicket(creator, description, position)
-	return doPost(buildUrl("ticket", "add_ticket"), "creator=" .. textutils.urlEncode(creator) .. "&description=" .. textutils.urlEncode(description) .. "&position=" .. textutils.urlEncode(position))
+	return doPost(buildUrl("user", "add"), "name=" .. textutils.urlEncode(creator) .. "&desc=" .. textutils.urlEncode(description) .. "&pos=" .. textutils.urlEncode(position))
 end
 
 function getMyTickets(username)
-	return doGetPost(buildUrl("ticket", "get_user_tickets"), "name=" .. username)
+	return doGet(buildUrl("user", "issues", username), true)
 end
 
 function countMyTickets(username)
-	return doGetPost(buildUrl("ticket", "get_user_ticket_count"), "name=" .. username)
+	return doGet(buildUrl("user", "count", username), true)
 end
 
 -- Issues
