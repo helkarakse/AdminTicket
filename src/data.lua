@@ -98,8 +98,8 @@ local function doGetPost(url, data, debug)
 end
 
 -- Ticket
-function addTicket(creator, description, position)
-	return doPost(buildUrl("user", "issue"), "name=" .. textutils.urlEncode(creator) .. "&desc=" .. textutils.urlEncode(description) .. "&pos=" .. textutils.urlEncode(position), true)
+function addTicket(creator, description, position, packId, serverId)
+	return doPost(buildUrl("user", "issue"), "name=" .. textutils.urlEncode(creator) .. "&desc=" .. textutils.urlEncode(description) .. "&pos=" .. textutils.urlEncode(position) .. "&pack" .. packId .. "&server" .. serverId, true)
 end
 
 function getMyTickets(username)
@@ -116,11 +116,11 @@ end
 
 -- Issues
 function getIssues(authLevel)
-	return doGetPost(buildUrl("ticket", "get_issues"), "auth_level=" .. authLevel)
+	return doGetPost(buildUrl("ticket", "get_issues"), "auth_level=" .. authLevel, true)
 end
 
 function getIssuesByType(authLevel, status)
-	return doGetPost(buildUrl("ticket", "get_issues"), "auth_level=" .. authLevel .. "&status=" .. status)
+	return doGetPost(buildUrl("ticket", "get_issues"), "auth_level=" .. authLevel .. "&status=" .. status, true)
 end
 
 function getIssueDetails(authLevel, id)
@@ -130,12 +130,12 @@ end
 -- Auth
 -- Returns the auth level for a username
 function getAuth(username)
-	return doGet(buildUrl("admin", "auth", username), true)
+	return doGet(buildUrl("admin", "auth", username))
 end
 
 -- Returns a full list of the auth table
 function getAuthArray()
-	return doGet(buildUrl("admin", "auth"), true)
+	return doGet(buildUrl("admin", "auth"))
 end
 
 -- Sets the auth level of a username

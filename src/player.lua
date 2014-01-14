@@ -24,6 +24,7 @@ local switch = functions.switch
 local map
 local ticketArray = {}
 local serverId = string.sub(os.getComputerLabel(), 1, 1)
+local packId = string.lower(string.sub(os.getComputerLabel(), 2))
 
 -- Wrappers
 -- send message wrapper
@@ -37,7 +38,7 @@ local function getUserPosition(username)
 	local player = map.getPlayerByName(username)
 	local entity = player.asEntity()
 	local xPos, yPos, zPos = entity.getPosition()
-	return xPos .. "," .. yPos .. "," .. zPos .. ":" .. entity.getWorldID() .. ":" .. serverId
+	return xPos .. "," .. yPos .. "," .. zPos .. ":" .. entity.getWorldID()
 end
 
 -- checks if the user has a ticket that is being created
@@ -119,7 +120,7 @@ local function doSubmitTicket(username)
 	local ticket = getTicket(username)
 	if (ticket ~= nil) then
 		-- send the ticket
-		local jsonText = data.addTicket(ticket.creator, ticket.description, ticket.position)
+		local jsonText = data.addTicket(ticket.creator, ticket.description, ticket.position, packId, serverId)
 		local array = json.decode(jsonText)
 		if (array.success) then
 			-- delete the ticket from the ticket array
