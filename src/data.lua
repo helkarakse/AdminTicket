@@ -116,15 +116,15 @@ end
 
 -- Issues
 function getIssues(authLevel)
-	return doGetPost(buildUrl("admin", "issue"), "level=" .. authLevel, true)
+	return doGet(buildUrl("admin", "issue", authLevel), true)
 end
 
 function getIssuesByType(authLevel, status)
-	return doGetPost(buildUrl("admin", "issue"), "level=" .. authLevel .. "&status=" .. status, true)
+	return doGet(buildUrl("admin", "issue", authLevel, status), true)
 end
 
 function getIssueDetails(authLevel, id)
-	return doGetPost(buildUrl("admin", "get_issue_details"), "level=" .. authLevel .. "&id=" .. id, true)
+	return doGet(buildUrl("admin", "details", authLevel, id), true)
 end
 
 -- Auth
