@@ -116,7 +116,7 @@ end
 
 -- Issues
 function getIssues(authLevel)
-	return doGet(buildUrl("admin", "issue", authLevel), true)
+	return doGet(buildUrl("admin", "issue", authLevel, "none"), true)
 end
 
 function getIssuesByType(authLevel, status)
